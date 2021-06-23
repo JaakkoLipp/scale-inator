@@ -1,5 +1,5 @@
 #GUI
-import openpyxl, tkinter as tk, tkinter.font as tkFont, serial, datetime
+import tkinter as tk, tkinter.font as tkFont, datetime, system
 
 
 #init
