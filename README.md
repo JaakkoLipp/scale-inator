@@ -5,21 +5,21 @@ best MS-paint art:
 
 #notes
 
-core:
-*input data from serial (vaaka).  
-*read koppa barcode with scanner.  
-*koppas 1-5 to kerääjä1, 5-10 to kerääjä2.  
-*kerääjä=ID.  
-*log both kg and kerääjä to excel in different columns.  
-*log summer TOTAL KG of berry collectors (excel).  
+core:  
+-input data from serial (vaaka).  
+-read koppa barcode with scanner.  
+-koppas 1-5 to kerääjä1, 5-10 to kerääjä2.  
+-kerääjä=ID.  
+-log both kg and kerääjä to excel in different columns.  
+-log summer TOTAL KG of berry collectors (excel).  
 
 additional:
-*google drive backup.  
-*per day?  
-*kesätotal laskut voi tehdä myös excelillä.  
-*only per day logging with python?  
-*maybe also somehow compute which koppa is what kerääjä?  
-*minimize chance to duplicate same berries in program.  
+-google drive backup.  
+-per day?  
+-kesätotal laskut voi tehdä myös excelillä.  
+-only per day logging with python?  
+-maybe also somehow compute which koppa is what kerääjä?  
+-minimize chance to duplicate same berries in program.  
 
 
 Files:
