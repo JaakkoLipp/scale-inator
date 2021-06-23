@@ -28,3 +28,6 @@ mansikka.py main with data processing
 
 GUI.py GUI  
 data.py excel / data storage  
+
+
+BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ
