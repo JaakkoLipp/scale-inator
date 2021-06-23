@@ -8,4 +8,7 @@ print("Hello world")
 #-log koko kesän saldo
 #palkanmaksua.
 #päivä average
-#
+#koppabarcode scanner ettei voi lukea samaa koria kahteen kertaan
+#total laskut voi tehdä myös excelillä.
+#only logging with python
+#maybe also koppa -> jakaja?
