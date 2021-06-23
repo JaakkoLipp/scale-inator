@@ -1,7 +1,7 @@
 ###################
 #### main file ####
 ###################
-import UI, data #only works with aliohjelmas
+#import UI, data           #only works with aliohjelmas
 #illegal goods import
 import serial, datetime, sys
 
@@ -14,7 +14,18 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS,\
         timeout=0)
 
-#serial read
-weight = ser.readline()
+
+## MAIN
+def main():
+    currentID = input("SCAN ID: ")
+    #serial read weight on scale
+    weight = ser.readline()
+    if currentID == prevID: # scam prevention, check same persons all baskets pls
+        print("SAME AS PREVIOUS, NOT ACCEPTED.")
+    else:
+        #write
+        print("accepted")
+
+
 #serial close
 ser.close()
