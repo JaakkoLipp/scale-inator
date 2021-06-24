@@ -1,0 +1,25 @@
+name: checker
+
+on:
+  push:
+    paths:
+      - 'scale_inator/**.py'
+
+jobs:
+  checker:
+    name: Check repo for issues
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out git repo
+        uses: actions/checkout@v2
+
+      - name: Set up enviroment
+        run: |
+          sudo apt-get install python3
+          sudo pip install flake8
+
+      - name: Run flake8 linter
+        run: |
+          flake8 scale_inator --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 scale_inator --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
