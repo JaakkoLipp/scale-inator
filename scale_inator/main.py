@@ -28,7 +28,7 @@ def serRep():
     '''
     Serial like weight generator, Replaces serial input for demo
     '''
-    return round(random.uniform(1, 6), 2)
+    return round(random.uniform(10, 60), 2) #unrealistic debug numbers
 
 
 def cleanup():
