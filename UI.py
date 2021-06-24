@@ -2,32 +2,32 @@
 ### GUI ###
 ###########
 import tkinter as tk, tkinter.font as tkFont, datetime, sys
-from tkinter.ttk import *
+from time import sleep
+#from tkinter.ttk import *
 
-def createWindow():
+def createWindow(x,collector,weight):
         #init tk
     window = tk.Tk()
-    #window size, colour, font
-    window.geometry("480x480")
-    window.configure(bg='white')
+    #window size, font
+    window.geometry("800x480")
     fontStyle = tkFont.Font(family="Helvetica bold", size=20)
-    label = tk.Label(text="test", bg="white")
-    label.config(font=('Helvetica bold',28))
 
-    input = tk.Entry(width=50)
-    ###id = input.get()
-    ###weight = "x"
     #compile window
-    label.pack()
-    input.pack()
-    window.mainloop()
-
-def setBgColour(x):
-        #colours
     if x==True:
         window.configure(bg='Green')
+        text1="#",collector,"SUCCESSFULLY SAVED"
+        label = tk.Label(text=text1, bg="White")
+
     if x==False:
         window.configure(bg='Red')
+        label = tk.Label(text="SAME AS PREVIOUS,\nNOT ACCEPTED", bg="White")
+
+    label.config(font=('Helvetica bold',28))
+    label.pack()
+    window.after(5000, lambda: window.destroy())
+    window.mainloop()
 
 
-createWindow()
+
+createWindow(True,12,"4.20kg")
+createWindow(False,0,0)

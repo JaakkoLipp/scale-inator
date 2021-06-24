@@ -15,6 +15,7 @@ def serRep(): #replaces serial input for demo
 
 ## MAIN
 def main():
+
     #serial init
     """ser = serial.Serial(
         port='/dev/ttyUSB0',\
@@ -51,11 +52,15 @@ def main():
             ##ID processing
             if currentID == prevID: # scam prevention, check same persons all baskets pls
                 print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
+                #prompt
+                UI.createWindow(False)
                 continue
 
             #prints & collector
             collector = ((currentID-1)//20)+1 #calculates collector from ID
             print("#",str(collector)+",","SUCCESSFULLY SAVED", weight, "kg")
+            #prompt
+            UI.createWindow(True,collector,weight)
             #csv write weight+ID same row different columns
             prevID = currentID
 
