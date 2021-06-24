@@ -1,8 +1,8 @@
 ###################
 #### main file ####
 ###################
-
 #https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unknown.png
+
 import UI #, data           #only works with aliohjelmas
 #illegal goods import
 import serial, datetime, sys, random
