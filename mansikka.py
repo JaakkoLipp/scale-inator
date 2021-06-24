@@ -6,13 +6,13 @@
 import serial, datetime, sys, random
 import time
 #serial init
-ser = serial.Serial(
+"""ser = serial.Serial(
     port='/dev/ttyUSB0',\
     baudrate=9600,\
     parity=serial.PARITY_NONE,\
     stopbits=serial.STOPBITS_ONE,\
     bytesize=serial.EIGHTBITS,\
-    timeout=0)
+    timeout=0)"""
 
 
 def serRep(): #replaces serial input for demo
@@ -26,26 +26,13 @@ def main():
         time.sleep(1)
         #serial read weight on scale
         """weight = ser.readline()"""
-        weight = serRep()
+        weight = serRep() #read "serial"
         if currentID == prevID: # scam prevention, check same persons all baskets pls
             print("SAME AS PREVIOUS,\n NOT ACCEPTED.")
             continue
-        if currentID < 5: #korit [0-4]
-            #write
-            print("accepted, ", currentID)
-            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-            print()
-        elif currentID >= 5 and currentID < 10: #korit [5-9]
-            #write
-            print("accepted, ", currentID)
-            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-            print()
-        elif currentID >= 10 and currentID < 15: #korit [10-14]
-            #write
-            print("accepted, ", currentID)
-            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-            print()
-    prevID = currentID
+        
+        prevID = currentID
 main()
+
 #serial close
 """ser.close()"""

@@ -22,9 +22,9 @@ additional:
 
 
 Files:  
-mansikka.py main with data processing   
+mansikka.py main     
 GUI.py GUI  
-data.py excel / data storage  
+data.py csv / data storage  if need alot of code  
 
 BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ  
 -calculate totals as a summ on excel with specific collector IDs  
@@ -32,3 +32,5 @@ BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ
 Needs Fixing:  
 -kori ID assignment to specific collectors without massive ifelse, # of collectors big.  
 -ID input requires Enter press
+
+- 100 Collectors, up to 20 IDs per 1c
