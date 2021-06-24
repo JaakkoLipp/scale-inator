@@ -15,7 +15,7 @@ ser = serial.Serial(
     timeout=0)
 
 
-def serRep(): #replaces w serial input for demo
+def serRep(): #replaces serial input for demo
     return round(random.uniform(1,6), 2)
 
 ## MAIN
@@ -30,23 +30,22 @@ def main():
         if currentID == prevID: # scam prevention, check same persons all baskets pls
             print("SAME AS PREVIOUS,\n NOT ACCEPTED.")
             continue
-        else:
-            if currentID < 5: #korit [0-4]
-                #write
-                print("accepted, ", currentID)
-                print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-                print()
-            elif currentID >= 5 and currentID < 10: #korit [5-9]
-                #write
-                print("accepted, ", currentID)
-                print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-                print()
-            elif currentID >= 10 and currentID < 15: #korit [10-14]
-                #write
-                print("accepted, ", currentID)
-                print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
-                print()
-        prevID = currentID
+        if currentID < 5: #korit [0-4]
+            #write
+            print("accepted, ", currentID)
+            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
+            print()
+        elif currentID >= 5 and currentID < 10: #korit [5-9]
+            #write
+            print("accepted, ", currentID)
+            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
+            print()
+        elif currentID >= 10 and currentID < 15: #korit [10-14]
+            #write
+            print("accepted, ", currentID)
+            print("WEIGHT WRITTEN SUCCESSFULLY", weight, "kg.")
+            print()
+    prevID = currentID
 main()
 #serial close
 """ser.close()"""
