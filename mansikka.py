@@ -30,7 +30,7 @@ def main():
         if currentID == prevID: # scam prevention, check same persons all baskets pls
             print("SAME AS PREVIOUS,\n NOT ACCEPTED.")
             continue
-        
+        collector = ((currentID-1)//20)+1
         prevID = currentID
 main()
 
