@@ -13,7 +13,7 @@ def dataHandler(weight,currentID,collector):
     #this not sustainable
     writer = csv.writer(f)
     info=(weight,currentID,collector,date)
-    writer.writerow(tup)
+    writer.writerow(info)
     f.close()
 
 def totalSorter():
@@ -22,4 +22,4 @@ def totalSorter():
 
 
 # totalSorter()
-# dataHandler(1,12,1)
+#dataHandler(1,12,1)

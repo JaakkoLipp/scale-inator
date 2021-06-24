@@ -99,9 +99,8 @@ def main():
 
             # prints & collector
             collector = ((currentID-1)//20)+1  # calculates collector from ID
-            #save
+
             data.dataHandler(weight,currentID,collector)
-            #print
             print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
             #print command to data.py?
             UI.createWindow(True, collector, weight)
