@@ -1,13 +1,17 @@
 ###################
 #### main file ####
 ###################
+
+
 #import UI, data           #only works with aliohjelmas
 #illegal goods import
 import serial, datetime, sys, random
 import time
 
+#serial like weight generator
 def serRep(): #replaces serial input for demo
     return round(random.uniform(1,6), 2)
+
 
 ## MAIN
 def main():
@@ -19,7 +23,7 @@ def main():
         stopbits=serial.STOPBITS_ONE,\
         bytesize=serial.EIGHTBITS,\
         timeout=0)"""
-    prevID = None
+    prevID = None #set variable for id
 
     try:#while loop failure handling
         while(1):
@@ -39,7 +43,6 @@ def main():
             except:
                 print("SCAN FAILED")
                 continue
-            time.sleep(0.2)#enhances reading clarity
 
             #serial read weight on scale
             """weight = ser.readline()"""
@@ -63,5 +66,6 @@ def main():
         """ser.close()"""
         sys.exit(-1)
 
+#run
 if __name__ == "__main__":
     main()
