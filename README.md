@@ -30,4 +30,5 @@ GUI.py GUI
 data.py excel / data storage  
 
 
-BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ
+BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ  
+-calculate totals as a summ on excel with specific collector IDs
