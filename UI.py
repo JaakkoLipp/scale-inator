@@ -10,7 +10,7 @@ def createWindow():
     window.geometry("1280x720")
     window.configure(bg='white')
     fontStyle = tkFont.Font(family="Helvetica bold", size=20)
-    label = tk.Label(text="Vaakanaattori9000", bg="white")
+    label = tk.Label(text="test", bg="white")
     label.config(font=('Helvetica bold',28))
 
     input = tk.Entry(width=50)
