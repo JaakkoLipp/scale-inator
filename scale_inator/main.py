@@ -1,7 +1,20 @@
-##################
-#### mansikka ####
-##################
-#https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unknown.png
+'''
+   ###  ###
+    ######
+  ###########
+ ##############
+ ## Mansikka ##
+ ##############
+ ##############
+  ############
+   ##########
+    ########
+     #####
+      ###
+
+https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unknown.png
+'''
+
 from argparse import ArgumentParser
 # import datetime
 import random
@@ -9,6 +22,7 @@ import serial
 import sys
 # import time
 import UI
+
 
 def serRep():
     '''
@@ -39,6 +53,7 @@ def main():
 
     if not arguments.pretend:
         # serial init
+        global ser
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
@@ -77,13 +92,13 @@ def main():
             # scam prevention, check same persons all baskets pls
             if currentID == previousID:
                 print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-                UI.createWindow(False,0,0)
+                UI.createWindow(False, 0, 0)
                 continue
 
             # prints & collector
             collector = ((currentID-1)//20)+1  # calculates collector from ID
             print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            UI.createWindow(True,collector,weight)
+            UI.createWindow(True, collector, weight)
             # csv write weight+ID same row different columns
             previousID = currentID
     except:  # noqa: E722
