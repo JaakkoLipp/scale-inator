@@ -15,19 +15,19 @@ def createWindow(x,collector,weight):
     #compile window
     if x==True:
         window.configure(bg='Green')
-        text1="#",collector,"SUCCESSFULLY SAVED"
+        text1=("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
         label = tk.Label(text=text1, bg="White")
 
     if x==False:
         window.configure(bg='Red')
         label = tk.Label(text="SAME AS PREVIOUS,\nNOT ACCEPTED", bg="White")
 
-    label.config(font=('Helvetica bold',28))
+    label.config(font=('Helvetica bold',32))
     label.pack()
     window.after(5000, lambda: window.destroy())
     window.mainloop()
 
 
-
-createWindow(True,12,"4.20kg")
-createWindow(False,0,0)
+"""test"""
+#createWindow(True,12,4.20)
+#createWindow(False,0,0)
