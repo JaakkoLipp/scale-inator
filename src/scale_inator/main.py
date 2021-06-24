@@ -16,52 +16,57 @@ https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unk
 '''
 
 from argparse import ArgumentParser
+from inspect import currentframe, getframeinfo
 # import datetime
 import atexit
 import random
 import serial
+import sys
 # import time
 try:
     from . import UI
+    from . import data
 except ImportError:
     import UI
     import data
 
 
-def serRep():
+class SerialPretend:
     '''
     Serial like weight generator, Replaces serial input for demo
     '''
-    # unrealistic debug numbers
-    return round(random.uniform(10, 60), 2)
+    def __init__(self):
+        return None
+
+    def readline(self):
+        return round(random.uniform(10, 60), 2)
+
+    def close(self):
+        print("Closed successfully")
 
 
-@atexit.register
 def cleanup():
     '''
     Close serial and file gracefully
     '''
     print("Cleaning up")
-    if not arguments.pretend:
-        ser.close()
+    ser.close()
     # file close
 
 
-def main():
-    '''
-    Main function and program loop
-    '''
-
-    # Argument parsing
+def arg_parser(args):
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
-    global arguments
-    arguments = parser.parse_args()
+    parser.add_argument("--no-gui", action="count",
+                        help="Do not show GUI")
+    return parser.parse_args()
 
+
+def setup_serial(arguments):
+    global ser
     if not arguments.pretend:
         # serial init
-        global ser
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
@@ -69,7 +74,11 @@ def main():
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
             timeout=0)
+    else:
+        ser = SerialPretend()
 
+
+def readinput(arguments):
     # set variable for id
     previousID = None
 
@@ -77,10 +86,6 @@ def main():
         currentID = input("Scan ID, Q to exit and save: ")
         if currentID.upper() == "Q":
             print("Quitting...")
-            # file close
-            # serial close
-            if not arguments.pretend:
-                ser.close()
             break
             # no quit
         else:
@@ -88,31 +93,46 @@ def main():
             currentID = int(currentID)
 
         # read weight from scale
-        if not arguments.pretend:
-            weight = ser.readline()
-        else:
-            weight = serRep()
+        weight = ser.readline()
 
         # ID processing
 
         # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-            UI.createWindow(False, 0, 0)
+            if not arguments.no_gui:
+                UI.createWindow(False, 0, 0)
             continue
 
         # prints & collector
         collector = ((currentID-1)//20)+1  # calculates collector from ID
-        #try save
+        # try save
         try:
-            data.dataHandler(weight,currentID,collector)
+            data.dataHandler(weight, currentID, collector)
             print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            UI.createWindow(True, collector, weight)
-        #save fails:
-        except:
-            print("saving failed! line 107")
+            if not arguments.no_gui:
+                UI.createWindow(True, collector, weight)
+        # save fails:
+        except OSError:
+            print("saving failed! line %s" %
+                  getframeinfo(currentframe()).lineno)
         # csv write weight+ID same row different columns
         previousID = currentID
+        
+        
+def main():
+    '''
+    Main function
+    '''
+
+    # Argument parsing
+    arguments = arg_parser(sys.argv[1:])
+
+    atexit.register(cleanup)
+
+    setup_serial(arguments)
+
+    readinput(arguments)
 
 
 if __name__ == "__main__":

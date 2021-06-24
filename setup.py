@@ -4,11 +4,12 @@ from setuptools import setup
 
 setup(
     name="scale_inator",
-    packages=['scale_inator'],
+    packages=["scale_inator"],
+    package_dir={"scale_inator": "src/scale_inator"},
     zip_safe=False,
     entry_points={
-        'console_scripts': [
-            'scale_inator=scale_inator.main:main',
+        "console_scripts": [
+            "scale_inator=scale_inator.main:main",
         ],
     },
 )

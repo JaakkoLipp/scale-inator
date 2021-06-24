@@ -8,8 +8,11 @@ help:
 clean:
 	$(RM) -rd build
 	$(RM) -rd dist
+	$(RM) -rd .pytest_cache
 	$(RM) -rd scale_inator.egg-info
-	$(RM) -rd scale_inator/__pycache__
+	$(RM) -rd src/__pycache__
+	$(RM) -rd src/scale_inator/__pycache__
+	$(RM) -rd src/tests/__pycache__
 
 install:
 	python setup.py install --user
@@ -19,3 +22,6 @@ uninstall:
 
 lint:
 	flake8 scale_inator --exit-zero
+
+test:
+	pytest
