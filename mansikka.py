@@ -21,17 +21,36 @@ def serRep(): #replaces serial input for demo
 ## MAIN
 def main():
     prevID = ""
-    while(1):
-        currentID = int(input("SCAN ID: "))
-        time.sleep(1)
-        #serial read weight on scale
-        """weight = ser.readline()"""
-        weight = serRep() #read "serial"
-        if currentID == prevID: # scam prevention, check same persons all baskets pls
-            print("SAME AS PREVIOUS,\n NOT ACCEPTED.")
-            continue
-        collector = ((currentID-1)//20)+1
-        prevID = currentID
+    try:
+        while(1):
+            try:
+                currentID = input("SCAN ID, Q to exit and save: ")
+                if currentID == "q":
+                    print("Saving...")
+                    #file close
+                    break
+                else:
+                    currentID=int(currentID)
+            except:
+                print("SCAN FAILED")
+                continue
+            time.sleep(1)
+            #serial read weight on scale
+            """weight = ser.readline()"""
+            weight = serRep() #read "serial"
+            if currentID == prevID: # scam prevention, check same persons all baskets pls
+                print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
+                continue
+            collector = ((currentID-1)//20)+1
+            print("#",str(collector)+",","SUCCESSFULLY SAVED", weight, "kg")
+            #csv write weight+ID same row different columns
+            prevID = currentID
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        print("Program failed, closing and saving...")
+        #file close
+        sys.exit(-1)
+
 main()
 
 #serial close
