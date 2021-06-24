@@ -17,11 +17,14 @@ https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unk
 
 from argparse import ArgumentParser
 # import datetime
+import atexit
 import random
 import serial
-import sys
 # import time
-import UI
+try:
+    from . import UI
+except ImportError:
+    import UI
 
 
 def serRep():
@@ -32,12 +35,14 @@ def serRep():
     return round(random.uniform(10, 60), 2)
 
 
+@atexit.register
 def cleanup():
     '''
     Close serial and file gracefully
     '''
+    print("Cleaning up")
     if not arguments.pretend:
-        ser.close()  # noqa: F821
+        ser.close()
     # file close
 
 
@@ -45,6 +50,7 @@ def main():
     '''
     Main function and program loop
     '''
+
     # Argument parsing
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
@@ -66,49 +72,40 @@ def main():
     # set variable for id
     previousID = None
 
-    # while loop failure handling
-    try:
-        while (True):
-            currentID = input("Scan ID, Q to exit and save: ")
-            if currentID.upper() == "Q":
-                print("Saving...")
-                # file close
-                # serial close
-                if not arguments.pretend:
-                    ser.close()
-                break
-                # no quit
-            else:
-                # convert id to int
-                currentID = int(currentID)
-
-            # read weight from scale
+    while (True):
+        currentID = input("Scan ID, Q to exit and save: ")
+        if currentID.upper() == "Q":
+            print("Saving...")
+            # file close
+            # serial close
             if not arguments.pretend:
-                weight = ser.readline()
-            else:
-                weight = serRep()
+                ser.close()
+            break
+            # no quit
+        else:
+            # convert id to int
+            currentID = int(currentID)
 
-            # ID processing
+        # read weight from scale
+        if not arguments.pretend:
+            weight = ser.readline()
+        else:
+            weight = serRep()
 
-            # scam prevention, check same persons all baskets pls
-            if currentID == previousID:
-                print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-                UI.createWindow(False, 0, 0)
-                continue
+        # ID processing
 
-            # prints & collector
-            collector = ((currentID-1)//20)+1  # calculates collector from ID
-            print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            UI.createWindow(True, collector, weight)
-            # csv write weight+ID same row different columns
-            previousID = currentID
-    except:  # noqa: E722
-        # save closing with file & serial
-        print("Unexpected error: %s" % sys.exc_info()[0])
-        print("Program failed, closing and saving...")
-        cleanup()
-        sys.exit(-1)
-    cleanup()
+        # scam prevention, check same persons all baskets pls
+        if currentID == previousID:
+            print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
+            UI.createWindow(False, 0, 0)
+            continue
+
+        # prints & collector
+        collector = ((currentID-1)//20)+1  # calculates collector from ID
+        print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
+        UI.createWindow(True, collector, weight)
+        # csv write weight+ID same row different columns
+        previousID = currentID
 
 
 if __name__ == "__main__":
