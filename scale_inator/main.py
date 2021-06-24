@@ -25,6 +25,7 @@ try:
     from . import UI
 except ImportError:
     import UI
+    import data
 
 
 def serRep():
@@ -75,7 +76,7 @@ def main():
     while (True):
         currentID = input("Scan ID, Q to exit and save: ")
         if currentID.upper() == "Q":
-            print("Saving...")
+            print("Quitting...")
             # file close
             # serial close
             if not arguments.pretend:
@@ -102,8 +103,14 @@ def main():
 
         # prints & collector
         collector = ((currentID-1)//20)+1  # calculates collector from ID
-        print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-        UI.createWindow(True, collector, weight)
+        #try save
+        try:
+            data.dataHandler(weight,currentID,collector)
+            print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
+            UI.createWindow(True, collector, weight)
+        #save fails:
+        except:
+            print("saving failed! line 107")
         # csv write weight+ID same row different columns
         previousID = currentID
 
