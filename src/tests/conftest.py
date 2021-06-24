@@ -1,5 +1,5 @@
 import pytest
-from scale_inator.main import setup_serial
+from src.scale_inator.main import setup_serial
 
 class ArgsPretend:
     def __init__(self, **kwargs):

@@ -1,4 +1,4 @@
-from scale_inator.main import readinput
+from src.scale_inator.main import readinput
 import builtins
 import pytest
 import re
