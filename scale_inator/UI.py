@@ -10,7 +10,7 @@ def createWindow(x,collector,weight):
     window = tk.Tk()
     #window size, font
     window.geometry("800x240")
-    fontStyle = tkFont.Font(family="Helvetica bold", size=20)
+    fontStyle = tkFont.Font(family="Helvetica bold", size=48)
 
     #compile window
     if x==True:
@@ -20,13 +20,12 @@ def createWindow(x,collector,weight):
 
     if x==False:
         window.configure(bg='Red')
-        label = tk.Label(text="SAME AS PREVIOUS,\nNOT ACCEPTED", bg="Green", fg="white")
-
+        label = tk.Label(text="\nNOT ACCEPTED", bg="Red", fg="white")
+    #configs
     label.config(font=('Helvetica bold',48))
     label.pack()
     window.after(5000, lambda: window.destroy())
     window.mainloop()
-
 
 """test"""
 #createWindow(True,12,4.20)
