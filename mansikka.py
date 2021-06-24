@@ -6,14 +6,14 @@
 import serial, datetime, sys, random
 import time
 #serial init
-"""ser = serial.Serial(
-    port='COM5',\
+ser = serial.Serial(
+    port='/dev/ttyUSB0',\
     baudrate=9600,\
     parity=serial.PARITY_NONE,\
     stopbits=serial.STOPBITS_ONE,\
     bytesize=serial.EIGHTBITS,\
-        timeout=0)
-"""
+    timeout=0)
+
 
 def serRep(): #replaces w serial input for demo
     return round(random.uniform(1,6), 2)

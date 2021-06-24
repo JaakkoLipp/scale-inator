@@ -9,29 +9,26 @@ core:
 - input data from serial (vaaka).  
 - read koppa barcode with scanner.  
 - koppas 1-5 to kerääjä1, 5-10 to kerääjä2.  
-- kerääjä=ID.  
+- Collectors have # of baskets. baskets have ID from 0-x.
 - log both kg and kerääjä to excel in different columns.  
 - log summer TOTAL KG of berry collectors (excel).  
 
 additional:  
-- google drive backup.    
+- web storage backup.    
 - per day?  
-- kesätotal laskut voi tehdä myös excelillä.  
-- only per day logging with python?  
+- per day logging with python?  
 - maybe also somehow compute which koppa is what kerääjä?  
 - minimize chance to duplicate same berries in program.  
 
 
-Files:
-
-mansikka.py main with data processing  
-
+Files:  
+mansikka.py main with data processing   
 GUI.py GUI  
 data.py excel / data storage  
-
 
 BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ  
 -calculate totals as a summ on excel with specific collector IDs  
 
 Needs Fixing:  
--kori ID assignment to specific collectors  
+-kori ID assignment to specific collectors without massive ifelse, # of collectors big.  
+-ID input requires Enter press
