@@ -2,8 +2,8 @@
 #### main file ####
 ###################
 
-
-#import UI, data           #only works with aliohjelmas
+#https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unknown.png
+import UI #, data           #only works with aliohjelmas
 #illegal goods import
 import serial, datetime, sys, random
 import time
@@ -28,7 +28,8 @@ def main():
     try:#while loop failure handling
         while(1):
             try: #scanning failure handling
-                currentID = input("SCAN ID, Q to exit and save: ")
+                print("\nPress Q to exit and save\n")
+                currentID = input("SCAN ID: ")
                 #safe quit
                 if currentID == "q":
                     print("Saving...")

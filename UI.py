@@ -2,12 +2,13 @@
 ### GUI ###
 ###########
 import tkinter as tk, tkinter.font as tkFont, datetime, sys
+from tkinter.ttk import *
 
 def createWindow():
-    #init tk
+        #init tk
     window = tk.Tk()
     #window size, colour, font
-    window.geometry("1280x720")
+    window.geometry("480x480")
     window.configure(bg='white')
     fontStyle = tkFont.Font(family="Helvetica bold", size=20)
     label = tk.Label(text="test", bg="white")
@@ -19,5 +20,14 @@ def createWindow():
     #compile window
     label.pack()
     input.pack()
-
     window.mainloop()
+
+def setBgColour(x):
+        #colours
+    if x==True:
+        window.configure(bg='Green')
+    if x==False:
+        window.configure(bg='Red')
+
+
+createWindow()
