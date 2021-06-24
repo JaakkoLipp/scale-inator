@@ -21,7 +21,7 @@ import random
 import serial
 import sys
 
-import UI, data
+import UI #, data
 
 
 def serRep():
