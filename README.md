@@ -3,23 +3,23 @@ Perniöhedelmä palkkalaskuri
 best MS-paint art:
 ![possibleplan](https://user-images.githubusercontent.com/46355010/123144712-a7aec900-d464-11eb-9ec2-39262f5c3c75.png)
 
-#notes
+# notes
 
 core:  
--input data from serial (vaaka).  
--read koppa barcode with scanner.  
--koppas 1-5 to kerääjä1, 5-10 to kerääjä2.  
--kerääjä=ID.  
--log both kg and kerääjä to excel in different columns.  
--log summer TOTAL KG of berry collectors (excel).  
+- input data from serial (vaaka).  
+- read koppa barcode with scanner.  
+- koppas 1-5 to kerääjä1, 5-10 to kerääjä2.  
+- kerääjä=ID.  
+- log both kg and kerääjä to excel in different columns.  
+- log summer TOTAL KG of berry collectors (excel).  
 
 additional:  
--google drive backup.    
--per day?  
--kesätotal laskut voi tehdä myös excelillä.  
--only per day logging with python?  
--maybe also somehow compute which koppa is what kerääjä?  
--minimize chance to duplicate same berries in program.  
+- google drive backup.    
+- per day?  
+- kesätotal laskut voi tehdä myös excelillä.  
+- only per day logging with python?  
+- maybe also somehow compute which koppa is what kerääjä?  
+- minimize chance to duplicate same berries in program.  
 
 
 Files:
@@ -31,4 +31,7 @@ data.py excel / data storage
 
 
 BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ  
--calculate totals as a summ on excel with specific collector IDs
+-calculate totals as a summ on excel with specific collector IDs  
+
+Needs Fixing:  
+-kori ID assignment to specific collectors  

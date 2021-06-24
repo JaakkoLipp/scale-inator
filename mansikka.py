@@ -28,8 +28,7 @@ def main():
         """weight = ser.readline()"""
         weight = serRep()
         if currentID == prevID: # scam prevention, check same persons all baskets pls
-            print("SAME AS PREVIOUS, \n NOT ACCEPTED.")
-            print()
+            print("SAME AS PREVIOUS,\n NOT ACCEPTED.")
             continue
         else:
             if currentID < 5: #korit [0-4]
