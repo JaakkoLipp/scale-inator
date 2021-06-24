@@ -39,13 +39,13 @@ def main():
 
     if not arguments.pretend:
         # serial init
-        """ser = serial.Serial(
+        ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
-            timeout=0)"""
+            timeout=0)
 
     # set variable for id
     previousID = None
