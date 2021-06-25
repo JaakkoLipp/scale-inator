@@ -17,7 +17,7 @@ jobs:
       - name: Set up enviroment
         run: |
           sudo apt-get install python3 python3-tk
-          sudo pip install flake8 pytest
+          sudo pip install -r requirements-dev.txt
 
       - name: Run flake8 linter
         run: |
