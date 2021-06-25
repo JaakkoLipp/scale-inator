@@ -57,8 +57,8 @@ def test_input_csv(main_setup, monkeypatch):
     for num in num_list:
         assert re.match(
             ("[0-9.]*,{},{},{}").format(
-                int(num),
-                ((int(num)-1)//20)+1,
+                num,
+                ((num-1)//20)+1,
                 datetime.now().strftime("%d.%m.%Y")
             ),
             csvfile.readline()
