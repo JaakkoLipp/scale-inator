@@ -118,8 +118,8 @@ def readinput(arguments):
                   getframeinfo(currentframe()).lineno)
         # csv write weight+ID same row different columns
         previousID = currentID
-        
-        
+
+
 def main():
     '''
     Main function

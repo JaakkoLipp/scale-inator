@@ -1,31 +1,44 @@
 # mansikka data
-import random
+import random  # noqa: F401
 import datetime
-import sys
+import sys  # noqa: F401
 import csv
-#illegal aliens
+import os
+# illegal aliens
 
-def dataHandler(weight,currentID,collector):
+
+def xdg_data_dir():
+    datadir = os.path.join(
+        os.getenv('XDG_DATA_HOME',
+                  os.path.expanduser("~/.local/share")),
+        "scale_inator")
+    if not os.path.isdir(datadir):
+        os.mkdir(datadir)
+    return datadir
+
+
+def dataHandler(weight, currentID, collector):
     date = datetime.datetime.now()
-    date=date.strftime("%d.%m.%Y")
+    filename = ("data-{}.csv".format(date.strftime("%Y%m%d")))
+    date = date.strftime("%d.%m.%Y")
 
-    f = open("data.csv", "a",  newline="")
+    f = open(os.path.join(xdg_data_dir(), filename), "a",  newline="")
 
     writer = csv.writer(f)
-    info=(weight,currentID,collector,date)
+    info = (weight, currentID, collector, date)
     writer.writerow(info)
     f.close()
+
 
 def totalSorter():
     print("oof")
 
 
-
-
-"""notes"""
-    #change filename to date
-    #data.csv name not optimal? daily new data.
-
+'''
+NOTES:
+ change filename to date
+ data.csv name not optimal? daily new data.
+'''
 
 # totalSorter()
-#dataHandler(1,12,1)
+# dataHandler(1,12,1)
