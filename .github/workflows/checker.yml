@@ -3,8 +3,7 @@ name: checker
 on:
   push:
     paths:
-      - 'scale_inator/**.py'
-      - 'tests/**.py'
+      - 'src/**.py'
 
 jobs:
   checker:
