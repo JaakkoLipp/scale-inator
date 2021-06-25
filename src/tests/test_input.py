@@ -17,6 +17,7 @@ def set_env():
     register(cleantemp)
     environ["XDG_DATA_HOME"] = path
 
+
 @pytest.mark.timeout(60)
 def test_input_quit(capsys, main_setup, monkeypatch):
     arguments = main_setup
@@ -24,6 +25,7 @@ def test_input_quit(capsys, main_setup, monkeypatch):
     readinput(arguments)
     captured = capsys.readouterr()
     assert captured.out == "Quitting...\n"
+
 
 @pytest.mark.timeout(60)
 def test_input_scam_detection(capsys, main_setup, monkeypatch):
@@ -35,6 +37,7 @@ def test_input_scam_detection(capsys, main_setup, monkeypatch):
     except StopIteration:
         captured = capsys.readouterr()
         assert re.search("SAME AS PREVIOUS,\nNOT ACCEPTED.\n", captured.out)
+
 
 @pytest.mark.timeout(60)
 def test_input_csv(main_setup, monkeypatch):
