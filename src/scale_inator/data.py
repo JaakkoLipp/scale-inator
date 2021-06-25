@@ -17,12 +17,15 @@ def xdg_data_dir():
     return datadir
 
 
+def get_csv_name():
+    return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
+
+
 def dataHandler(weight, currentID, collector):
     date = datetime.datetime.now()
-    filename = ("data-{}.csv".format(date.strftime("%Y%m%d")))
     date = date.strftime("%d.%m.%Y")
 
-    f = open(os.path.join(xdg_data_dir(), filename), "a",  newline="")
+    f = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
 
     writer = csv.writer(f)
     info = (weight, currentID, collector, date)
