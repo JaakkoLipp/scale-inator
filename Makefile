@@ -21,7 +21,7 @@ uninstall:
 	pip uninstall scale_inator
 
 lint:
-	flake8 scale_inator --exit-zero
+	flake8 src --exit-zero
 
 test:
 	pytest
