@@ -1,7 +1,8 @@
+.benchmarks
 .pytest_cache
 __pycache__
-build
 *.csv
+*.xlsx
+build
 dist
 scale_inator.egg-info
-*.xlsx
