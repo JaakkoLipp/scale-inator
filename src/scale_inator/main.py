@@ -83,11 +83,14 @@ def readinput(arguments):
     previousID = None
 
     while (True):
-        currentID = input("Scan ID, Q to exit and save: ")
+        currentID = input("Scan ID, Q to exit, \"undo\" to remove last write: ")
         if currentID.upper() == "Q":
             print("Quitting...")
             break
             # no quit
+        elif currentID.lower() == "undo":
+            data.undo()  # remove last line incase of wrong data
+            continue
         else:
             # convert id to int
             currentID = int(currentID)
