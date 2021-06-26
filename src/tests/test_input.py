@@ -74,7 +74,6 @@ def test_input_csv(main_setup, monkeypatch):
     arguments = main_setup
     set_env()
     num_list = randlist(10000)
-    print(num_list)
     iterate = iter(list(map(str, num_list))+["q"])
 
     monkeypatch.setattr('builtins.input', lambda msg: next(iterate))
