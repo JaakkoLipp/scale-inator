@@ -18,7 +18,37 @@ def set_env():
     environ["XDG_DATA_HOME"] = path
 
 
-@pytest.mark.timeout(60)
+def randlist(lngth, **kwargs):
+    lst = kwargs.get("lst", None)
+    if lst is None:
+        from sys import setrecursionlimit
+
+        # lowering this will lead to A) RecursionError B) a hang
+        setrecursionlimit(10**5)
+
+        if type(lngth) is not int:
+            raise TypeError("Length is not an integer")
+        if lngth == 0:
+            return []
+        if lngth > 10000:
+            # Segmentation fault with larger values
+            raise OverflowError("Length too large to handle")
+
+        return randlist(lngth, lst=[])
+    else:
+        from random import uniform
+        if lngth == 0:
+            return lst
+
+        def create_rand_num():
+            rand = round(uniform(1, 100))
+            if len(lst) > 0 and rand == lst[-1]:
+                return create_rand_num()
+            return rand
+        return randlist(lngth-1, lst=lst+[create_rand_num()])
+
+
+@pytest.mark.timeout(1)
 def test_input_quit(capsys, main_setup, monkeypatch):
     arguments = main_setup
     monkeypatch.setattr('builtins.input', lambda _: 'q')
@@ -27,7 +57,7 @@ def test_input_quit(capsys, main_setup, monkeypatch):
     assert captured.out == "Quitting...\n"
 
 
-@pytest.mark.timeout(60)
+@pytest.mark.timeout(1)
 def test_input_scam_detection(capsys, main_setup, monkeypatch):
     arguments = main_setup
     inputs = iter(["20", "20"])
@@ -39,11 +69,12 @@ def test_input_scam_detection(capsys, main_setup, monkeypatch):
         assert re.search("SAME AS PREVIOUS,\nNOT ACCEPTED.\n", captured.out)
 
 
-@pytest.mark.timeout(60)
+@pytest.mark.timeout(2)
 def test_input_csv(main_setup, monkeypatch):
     arguments = main_setup
     set_env()
-    num_list = [2, 3, 5, 7, 11, 13, 17, 19, 23]
+    num_list = randlist(10000)
+    print(num_list)
     iterate = iter(list(map(str, num_list))+["q"])
 
     monkeypatch.setattr('builtins.input', lambda msg: next(iterate))
