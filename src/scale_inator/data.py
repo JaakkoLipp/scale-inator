@@ -35,6 +35,7 @@ def dataHandler(weight, currentID, collector):
 
 def undo():  # needs testing
     try:
+        print("Undo in progress...")
         f1 = open(os.path.join(xdg_data_dir(), get_csv_name()), "r",  newline="")
         lines = f1.readlines()  # get rows into list
         lastRow = lines.pop()  # removes last row -> lastRow var
@@ -44,7 +45,7 @@ def undo():  # needs testing
         f2.writelines(lines)
         f2.close()
         # rewrite done
-        print("Undo, last row successfully removed:\n", lastRow)
+        print("Last row successfully removed:\n", lastRow)
     except OSError:
         print("Nothing undone.\n")
 
