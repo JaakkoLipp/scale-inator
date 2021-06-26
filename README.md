@@ -8,7 +8,7 @@ best MS-paint art:
 core:
 - input data from serial (vaaka).
 - read koppa barcode with scanner.
-- koppas 1-5 to kerääjä1, 5-10 to kerääjä2.
+- koppas 20/kerääjä
 - Collectors have # of baskets. baskets have ID from 0-x.
 - log both kg and kerääjä to excel in different columns.
 - log summer TOTAL KG of berry collectors (excel).
