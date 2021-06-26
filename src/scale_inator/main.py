@@ -100,7 +100,7 @@ def readinput(arguments):
             print("Invalid input, try again.")
             continue
         # read weight from scale
-        weight = ser.readline()
+        weight = ser.readline().decode('ascii')
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
