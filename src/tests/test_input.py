@@ -48,7 +48,7 @@ def randlist(lngth, **kwargs):
         return randlist(lngth-1, lst=lst+[create_rand_num()])
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_input_quit(capsys, main_setup, monkeypatch):
     arguments = main_setup
     monkeypatch.setattr('builtins.input', lambda _: 'q')
@@ -57,7 +57,7 @@ def test_input_quit(capsys, main_setup, monkeypatch):
     assert captured.out == "Quitting...\n"
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_input_scam_detection(capsys, main_setup, monkeypatch):
     arguments = main_setup
     inputs = iter(["20", "20"])
@@ -69,7 +69,7 @@ def test_input_scam_detection(capsys, main_setup, monkeypatch):
         assert re.search("SAME AS PREVIOUS,\nNOT ACCEPTED.\n", captured.out)
 
 
-@pytest.mark.timeout(2)
+@pytest.mark.timeout(20)
 def test_input_csv(main_setup, monkeypatch):
     arguments = main_setup
     set_env()
