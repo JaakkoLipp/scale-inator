@@ -89,7 +89,7 @@ def readinput(arguments):
             break
             # no quit
         elif currentID.lower() == "undo":
-            data.undo() # remove last line incase of wrong data
+            data.undo()  # remove last line incase of wrong data
             continue
         else:
             # convert id to int

@@ -32,6 +32,7 @@ def dataHandler(weight, currentID, collector):
     writer.writerow(info)
     f.close()
 
+
 def undo():  # needs testing
     try:
         f1 = open(os.path.join(xdg_data_dir(), get_csv_name()), "r",  newline="")
@@ -47,12 +48,14 @@ def undo():  # needs testing
     except OSError:
         print("Nothing undone.\n")
 
+
 def seasonTotal():
     print("Calculate total not ready.\n")
 
 
 def cloudBackup():  # backup to GDrive or blank github repo? github with bash.
     print("Cloud backup not ready.\n")
+
 
 '''
 NOTES:
