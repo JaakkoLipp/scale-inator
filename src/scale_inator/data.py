@@ -46,9 +46,7 @@ def undo():  # needs testing
         f2.close()
         # rewrite done
         print("Last row successfully removed:\n", lastRow)
-    except OSError:
-        print("Nothing undone.\n")
-    except IndexError:
+    except OSError or IndexError:
         print("Nothing to undo.\n")
 
 
