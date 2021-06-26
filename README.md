@@ -22,7 +22,9 @@ data.py csv / data storage  if need alot of code
 
 
 # Needs Fixing:
-BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ
+BARCODE END WITH EOL / LINEBREAK P SYMBOL TO GET AUTOMATIC ENTER ON READ:
+https://www.zebra.com/us/en/support-downloads/knowledge-articles/evm/how-do-i-enable-a-carriage-return-line-feed-enter-key-suffix-after-every-scan-with-the-laser-scanners-when-attached-via-usb-or-keyboard-wedge.html
+at end of id, add enter
 
 -ID input requires Enter press
 - kg analytics and data simplifications needed.
