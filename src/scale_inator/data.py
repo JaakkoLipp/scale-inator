@@ -50,7 +50,7 @@ def undo():  # needs testing
         print("Nothing undone.\n")
 
 
-def seasonTotal():
+def total():
     print("Calculate total not ready.\n")
 
 
