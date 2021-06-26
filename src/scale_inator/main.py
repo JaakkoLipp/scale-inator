@@ -67,6 +67,7 @@ def setup_serial(arguments):
     global ser
     if not arguments.pretend:
         # serial init
+        #19200 9600 4800 2400 1200 are possible baudrates
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
