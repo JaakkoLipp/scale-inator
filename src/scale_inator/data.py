@@ -49,7 +49,7 @@ def undo():  # needs testing
     except OSError:
         print("Nothing undone.\n")
     except IndexError:
-            print("Nothing to undo.\n")
+        print("Nothing to undo.\n")
 
 
 def total():
