@@ -44,7 +44,7 @@ def undo():  # needs testing
         f2.close()
         # rewrite done
         print("Undo, last row successfully removed:\n", lastRow)
-    except:
+    except OSError:
         print("Nothing undone.\n")
 
 def seasonTotal():
