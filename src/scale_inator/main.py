@@ -101,15 +101,12 @@ def readinput(arguments):
             continue
         # read weight from scale
         weight = ser.readline()
-
-        # ID processing
-        # scam prevention, check same persons all baskets pls
+        # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
             if not arguments.no_gui:
                 UI.createWindow(False, 0, 0)
             continue
-
         # prints & collector
         collector = ((currentID-1)//20)+1  # calculates collector from ID
         # try save
