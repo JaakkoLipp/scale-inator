@@ -32,10 +32,27 @@ def dataHandler(weight, currentID, collector):
     writer.writerow(info)
     f.close()
 
+def undo():  # needs testing
+    try:
+        f1 = open(os.path.join(xdg_data_dir(), get_csv_name()), "r",  newline="")
+        lines = f1.readlines()  # get rows into list
+        lastRow = lines.pop()  # removes last row -> lastRow var
+        f1.close()
+        # open with write
+        f2 = open(os.path.join(xdg_data_dir(), get_csv_name()), "w",  newline="")
+        f2.writelines(lines)
+        f2.close()
+        # rewrite done
+        print("Undo, last row successfully removed:\n", lastRow)
+    except:
+        print("Nothing undone.\n")
 
-def totalSorter():
-    print("oof")
+def seasonTotal():
+    print("Calculate total not ready.\n")
 
+
+def cloudBackup():  # backup to GDrive or blank github repo? github with bash.
+    print("Cloud backup not ready.\n")
 
 '''
 NOTES:
@@ -43,5 +60,5 @@ NOTES:
  data.csv name not optimal? daily new data.
 '''
 
-# totalSorter()
+# total()
 # dataHandler(1,12,1)
