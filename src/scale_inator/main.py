@@ -82,31 +82,31 @@ def readinput(arguments):
     # set variable for id
     previousID = None
 
+
     while (True):
         currentID = input("Scan ID, Q to exit, \"undo\" to remove last write: ")
-        if currentID.upper() == "Q":
-            print("Quitting...")
-            break
-            # no quit
-        elif currentID.lower() == "undo":
-            data.undo()  # remove last line incase of wrong data
+        try:
+            if currentID.upper() == "Q":
+                print("Quitting...")
+                break
+                # no quit
+            elif currentID.lower() == "undo":
+                data.undo()  # remove last line incase of wrong data
+                continue
+            else:
+                # convert id to int
+                currentID = int(currentID)
+        except ValueError:
+            print("Invalid input, try again.")
             continue
-        else:
-            # convert id to int
-            currentID = int(currentID)
-
         # read weight from scale
         weight = ser.readline()
-
-        # ID processing
-
-        # scam prevention, check same persons all baskets pls
+        # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
             if not arguments.no_gui:
                 UI.createWindow(False, 0, 0)
             continue
-
         # prints & collector
         collector = ((currentID-1)//20)+1  # calculates collector from ID
         # try save
