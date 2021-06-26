@@ -28,6 +28,7 @@ def dataHandler(weight, currentID, collector):
     f = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
 
     writer = csv.writer(f)
+    print("Writing to file in following format:\nWeight | BasketID | Collector | time")
     info = (weight, currentID, collector, date)
     writer.writerow(info)
     f.close()
