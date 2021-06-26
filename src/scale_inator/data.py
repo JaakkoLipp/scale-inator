@@ -48,6 +48,8 @@ def undo():  # needs testing
         print("Last row successfully removed:\n", lastRow)
     except OSError:
         print("Nothing undone.\n")
+    except IndexError:
+        print("Nothing to undo.\n")
 
 
 def total():
