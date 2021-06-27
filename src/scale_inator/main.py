@@ -82,9 +82,10 @@ def readinput(arguments):
     # set variable for id
     previousID = None
 
-
     while (True):
-        currentID = input("Scan ID, Q to exit, \"undo\" to remove last write: ")
+        currentID = input(
+            "Scan ID, Q to exit, \"undo\" to remove last write: "
+        )
         try:
             if currentID.upper() == "Q":
                 print("Quitting...")
@@ -108,7 +109,7 @@ def readinput(arguments):
                 UI.createWindow(False, 0, 0)
             continue
         # prints & collector
-        collector = ((currentID-1)//20)+1  # calculates collector from ID
+        collector = data.get_collectorID(currentID)
         # try save
         try:
             data.dataHandler(weight, currentID, collector)
