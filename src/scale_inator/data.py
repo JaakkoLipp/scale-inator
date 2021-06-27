@@ -17,6 +17,13 @@ def xdg_data_dir():
     return datadir
 
 
+def get_collectorID(koppaID):
+    '''
+    Calculates collector from ID
+    '''
+    return ((koppaID-1)//20)+1
+
+
 def get_csv_name():
     return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
 
@@ -36,12 +43,25 @@ def dataHandler(weight, currentID, collector):
 def undo():  # needs testing
     try:
         print("Undo in progress...")
-        f1 = open(os.path.join(xdg_data_dir(), get_csv_name()), "r",  newline="")
+        f1 = open(
+            os.path.join(
+                xdg_data_dir(),
+                get_csv_name()
+            ),
+            "r",
+            newline=""
+        )
         lines = f1.readlines()  # get rows into list
         lastRow = lines.pop()  # removes last row -> lastRow var
         f1.close()
         # open with write
-        f2 = open(os.path.join(xdg_data_dir(), get_csv_name()), "w",  newline="")
+        f2 = open(
+            os.path.join(
+                xdg_data_dir(),
+                get_csv_name()),
+            "w",
+            newline=""
+        )
         f2.writelines(lines)
         f2.close()
         # rewrite done
