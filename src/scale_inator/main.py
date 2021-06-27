@@ -39,7 +39,7 @@ class SerialPretend:
         return None
 
     def readline(self):
-        return round(random.uniform(10, 60), 2)
+        return str(round(random.uniform(10, 60), 2)).encode("utf8")
 
     def close(self):
         print("Closed successfully")
