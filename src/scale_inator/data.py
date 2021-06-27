@@ -17,6 +17,10 @@ def xdg_data_dir():
     return datadir
 
 
+def get_collectorID(koppaID):
+    return ((koppaID-1)//20)+1
+
+
 def get_csv_name():
     return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
 

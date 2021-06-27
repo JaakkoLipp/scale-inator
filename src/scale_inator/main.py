@@ -108,7 +108,7 @@ def readinput(arguments):
                 UI.createWindow(False, 0, 0)
             continue
         # prints & collector
-        collector = ((currentID-1)//20)+1  # calculates collector from ID
+        collector = data.get_collectorID(currentID)  # calculates collector from ID
         # try save
         try:
             data.dataHandler(weight, currentID, collector)
