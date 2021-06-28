@@ -58,8 +58,8 @@ def arg_parser(args):
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
-    parser.add_argument("--no-gui", action="count",
-                        help="Do not show GUI")
+    parser.add_argument("--gui", action="count",
+                        help="Show GUI")
     return parser.parse_args()
 
 
@@ -105,7 +105,7 @@ def readinput(arguments):
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-            if not arguments.no_gui:
+            if arguments.gui:
                 UI.createWindow(False, 0, 0)
             continue
         # prints & collector
@@ -114,7 +114,7 @@ def readinput(arguments):
         try:
             data.dataHandler(weight, currentID, collector)
             print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            if not arguments.no_gui:
+            if arguments.gui:
                 UI.createWindow(True, collector, weight)
         # save fails:
         except OSError:
