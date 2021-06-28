@@ -24,10 +24,8 @@ import serial
 import sys
 # import time
 try:
-    from . import UI
     from . import data
 except ImportError:
-    import UI
     import data
 
 
@@ -59,7 +57,7 @@ def arg_parser(args):
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
     parser.add_argument("--gui", action="count",
-                        help="Show GUI")
+                        help="Show GUI (REQUIRES TK)")
     return parser.parse_args()
 
 
@@ -76,6 +74,15 @@ def setup_serial(arguments):
             timeout=0)
     else:
         ser = SerialPretend()
+
+
+def createWindowUIwrap(arguments, ifsuccess, collector, weight):
+    if arguments.gui:
+        try:
+            from .UI import createWindow
+        except ImportError:
+            from UI import createWindow
+        createWindow(ifsuccess, collector, weight)
 
 
 def readinput(arguments):
@@ -105,8 +112,7 @@ def readinput(arguments):
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-            if arguments.gui:
-                UI.createWindow(False, 0, 0)
+            createWindowUIwrap(arguments, False, 0, 0)
             continue
         # prints & collector
         collector = data.get_collectorID(currentID)
@@ -114,8 +120,7 @@ def readinput(arguments):
         try:
             data.dataHandler(weight, currentID, collector)
             print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            if arguments.gui:
-                UI.createWindow(True, collector, weight)
+            createWindowUIwrap(arguments, True, collector, weight)
         # save fails:
         except OSError:
             print("saving failed! line %s" %
