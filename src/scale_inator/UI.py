@@ -3,9 +3,11 @@
 ### GUI ###
 ###########
 '''
-import tkinter as tk, tkinter.font as tkFont, datetime, sys  # noqa: E401,F401
-from time import sleep  # noqa: F401
-# from tkinter.ttk import *
+try:
+    from tkinter import font as tkFont
+    import tkinter as tk
+except ImportError:
+    raise ImportError("TK couldn't be imported, make sure its installed")
 
 
 def createWindow(x, collector, weight):
