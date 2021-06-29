@@ -9,6 +9,6 @@ class ArgsPretend:
 
 @pytest.fixture
 def main_setup():
-    arguments = ArgsPretend(pretend=1, no_gui=1)
+    arguments = ArgsPretend(gui=0, pretend=1)
     setup_serial(arguments)
     return arguments
