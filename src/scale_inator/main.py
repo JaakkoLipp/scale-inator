@@ -39,7 +39,7 @@ class SerialPretend:
         return None
 
     def readline(self):
-        return round(random.uniform(10, 60), 2)
+        return str(round(random.uniform(10, 60), 2)).encode("utf8")
 
     def close(self):
         print("Closed successfully")
@@ -67,13 +67,14 @@ def setup_serial(arguments):
     global ser
     if not arguments.pretend:
         # serial init
+        #19200 9600 4800 2400 1200 are possible baudrates
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=0)
+            #parity=serial.PARITY_NONE,
+            #stopbits=serial.STOPBITS_ONE,
+            #bytesize=serial.EIGHTBITS,
+            timeout=1)
     else:
         ser = SerialPretend()
 
@@ -101,7 +102,7 @@ def readinput(arguments):
             print("Invalid input, try again.")
             continue
         # read weight from scale
-        weight = ser.readline()
+        weight = ser.readline().decode('ascii')
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
