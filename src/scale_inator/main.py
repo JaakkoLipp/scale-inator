@@ -69,9 +69,9 @@ def setup_serial(arguments):
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
-            #parity=serial.PARITY_NONE,
-            #stopbits=serial.STOPBITS_ONE,
-            #bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
             timeout=1)
     else:
         ser = SerialPretend()
@@ -110,6 +110,9 @@ def readinput(arguments):
             continue
         # read weight from scale
         weight = ser.readline().decode('ascii')
+        # cut only kgs "ST,G    x.xxKG"
+        weight.replace(" ","") # empty space remover
+        weight=weight[3:] # leaves x.xxKG
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
