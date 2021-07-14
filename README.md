@@ -29,3 +29,4 @@ https://www.zebra.com/us/en/support-downloads/knowledge-articles/evm/how-do-i-en
 - kg analytics and data simplifications needed.
 - day / summer
 - Excell use sumif and countif functions  
+- How to delete file after summer?  
