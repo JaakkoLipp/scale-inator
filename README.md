@@ -30,3 +30,4 @@ https://www.zebra.com/us/en/support-downloads/knowledge-articles/evm/how-do-i-en
 - day / summer
 - Excell use sumif and countif functions  
 - How to delete file after summer?  
+- make a config file with numbers for baskets and such and file storage settings yms.  
