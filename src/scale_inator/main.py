@@ -112,7 +112,7 @@ def readinput(arguments):
         weight = ser.readline().decode('ascii')
         # cut only kgs "ST,G    x.xxKG"
         weight.replace(" ","") # empty space remover
-        weight=weight[3:] # leaves x.xxKG
+        weight=weight[8:] # leaves x.xxKG
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
@@ -123,7 +123,7 @@ def readinput(arguments):
         # try save
         try:
             data.dataHandler(weight, currentID, collector)
-            print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
+            print("#%s, SUCCESSFULLY SAVED %s" % (collector, weight))
             createWindowUIwrap(arguments, True, collector, weight)
         # save fails:
         except OSError:
