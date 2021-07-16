@@ -92,7 +92,7 @@ def readinput(arguments):
 
     while (True):
         currentID = input(
-            "Scan ID, Q to exit, \"undo\" to remove last write: "
+            "Scan ID, Q to exit, to remove last write \"undo\": "
         )
         try:
             if currentID.upper() == "Q":

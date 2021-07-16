@@ -29,7 +29,7 @@ def createWindow(x, collector, weight):
     # configs
     label.config(font=('Helvetica bold', 48))
     label.pack()
-    window.after(5000, lambda: window.destroy())
+    window.after(1500, lambda: window.destroy())
     window.mainloop()
 
 
