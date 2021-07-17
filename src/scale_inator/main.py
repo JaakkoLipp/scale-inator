@@ -109,10 +109,22 @@ def readinput(arguments):
             print("Invalid input, try again.")
             continue
         # read weight from scale
-        weight = ser.readline().decode('ascii')
-        # cut only kgs "ST,G    x.xxKG"
-        weight.replace(" ","") # empty space remover
-        weight=weight[8:] # leaves x.xxKG
+        ser = serial.Serial(
+            port='/dev/ttyUSB0',
+            baudrate=9600,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1)
+        while 1:
+            weight = ser.readline().decode('ascii')
+            if len(weight) < 17:
+                continue
+            else:
+                break
+        ser.close()
+        # cut "ST,G    x.xxKG"
+        weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
