@@ -98,9 +98,6 @@ def readscale():
             bytesize=serial.EIGHTBITS,
             timeout=1)
         weight = ser.readline().decode('ascii')
-        if "-" in weight:
-            print("negative value not accepted.")
-            break
         if len(weight) < 17:
             continue
         else:
@@ -132,6 +129,9 @@ def readinput(arguments):
             continue
         # read weight from scale
         weight = readscale()
+        if "-" in weight:
+            print("negative value not accepted.")
+            continue
         # cut "ST,G    x.xxKG"
         weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
         # ID processing # scam prevention, check same persons all baskets pls
