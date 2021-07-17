@@ -24,10 +24,8 @@ import serial
 import sys
 # import time
 try:
-    from . import UI
     from . import data
 except ImportError:
-    import UI
     import data
 
 
@@ -58,8 +56,8 @@ def arg_parser(args):
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
-    parser.add_argument("--no-gui", action="count",
-                        help="Do not show GUI")
+    parser.add_argument("--gui", action="count",
+                        help="Show GUI (REQUIRES TK)")
     return parser.parse_args()
 
 
@@ -71,13 +69,41 @@ def setup_serial(arguments):
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
-            #parity=serial.PARITY_NONE,
-            #stopbits=serial.STOPBITS_ONE,
-            #bytesize=serial.EIGHTBITS,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
             timeout=1)
     else:
         ser = SerialPretend()
 
+
+def createWindowUIwrap(arguments, ifsuccess, collector, weight):
+    if arguments.gui:
+        try:
+            from .UI import createWindow
+        except ImportError:
+            from UI import createWindow
+        createWindow(ifsuccess, collector, weight)
+
+def readtheshit():
+    while 1:
+        ser = serial.Serial(
+            port='/dev/ttyUSB0',
+            baudrate=9600,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1)
+        weight = ser.readline().decode('ascii')
+        if "-" in weight:
+            print("negative value not accepted, read again.")
+            break
+        if len(weight) < 17:
+            continue
+        else:
+            break
+    ser.close()
+    return weight
 
 def readinput(arguments):
     # set variable for id
@@ -85,7 +111,7 @@ def readinput(arguments):
 
     while (True):
         currentID = input(
-            "Scan ID, Q to exit, \"undo\" to remove last write: "
+            "Scan ID, Q to exit, to remove last write \"undo\": "
         )
         try:
             if currentID.upper() == "Q":
@@ -102,21 +128,21 @@ def readinput(arguments):
             print("Invalid input, try again.")
             continue
         # read weight from scale
-        weight = ser.readline().decode('ascii')
+        weight=readtheshit()
+        # cut "ST,G    x.xxKG"
+        weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-            if not arguments.no_gui:
-                UI.createWindow(False, 0, 0)
+            createWindowUIwrap(arguments, False, 0, 0)
             continue
         # prints & collector
         collector = data.get_collectorID(currentID)
         # try save
         try:
             data.dataHandler(weight, currentID, collector)
-            print("#%s, SUCCESSFULLY SAVED %skg" % (collector, weight))
-            if not arguments.no_gui:
-                UI.createWindow(True, collector, weight)
+            print("#%s, SUCCESSFULLY SAVED %s" % (collector, weight))
+            createWindowUIwrap(arguments, True, collector, weight)
         # save fails:
         except OSError:
             print("saving failed! line %s" %
