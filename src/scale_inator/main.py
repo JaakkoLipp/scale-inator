@@ -48,7 +48,10 @@ def cleanup():
     Close serial and file gracefully
     '''
     print("Cleaning up")
-    ser.close()
+    try:
+        ser.close()
+    except Exception:
+        print("serial already closed.")
     # file close
 
 
@@ -85,6 +88,25 @@ def createWindowUIwrap(arguments, ifsuccess, collector, weight):
             from UI import createWindow
         createWindow(ifsuccess, collector, weight)
 
+def readscale():
+    while 1:
+        ser = serial.Serial(
+            port='/dev/ttyUSB0',
+            baudrate=9600,
+            parity=serial.PARITY_NONE,
+            stopbits=serial.STOPBITS_ONE,
+            bytesize=serial.EIGHTBITS,
+            timeout=1)
+        weight = ser.readline().decode('ascii')
+        if "-" in weight:
+            print("negative value not accepted.")
+            break
+        if len(weight) < 17:
+            continue
+        else:
+            break
+    ser.close()
+    return weight
 
 def readinput(arguments):
     # set variable for id
@@ -109,23 +131,7 @@ def readinput(arguments):
             print("Invalid input, try again.")
             continue
         # read weight from scale
-        ser = serial.Serial(
-            port='/dev/ttyUSB0',
-            baudrate=9600,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1)
-        while 1:
-            weight = ser.readline().decode('ascii')
-            if "-" in weight:
-                print("negative value not accepted.")
-                continue
-            if len(weight) < 17:
-                continue
-            else:
-                break
-        ser.close()
+        weight = readscale()
         # cut "ST,G    x.xxKG"
         weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
         # ID processing # scam prevention, check same persons all baskets pls
