@@ -89,7 +89,7 @@ def createWindowUIwrap(arguments, ifsuccess, collector, weight):
         createWindow(ifsuccess, collector, weight)
 
 def readscale():
-    while 1:
+    while 1: #fix this with pretend later maybe?
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
