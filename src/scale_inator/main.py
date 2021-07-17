@@ -118,6 +118,9 @@ def readinput(arguments):
             timeout=1)
         while 1:
             weight = ser.readline().decode('ascii')
+            if "-" in weight:
+                print("negative value not accepted.")
+                continue
             if len(weight) < 17:
                 continue
             else:
