@@ -90,6 +90,7 @@ def createWindowUIwrap(arguments, ifsuccess, collector, weight):
 
 def readscale():
     while 1: #fix this with pretend later maybe?
+            #ser needs to be set everytime before reading it to get value
         ser = serial.Serial(
             port='/dev/ttyUSB0',
             baudrate=9600,
@@ -134,6 +135,7 @@ def readinput(arguments):
             continue
         # cut "ST,G    x.xxKG"
         weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
+        #kg still appears in data.csv? it cant calculate total with letters
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
