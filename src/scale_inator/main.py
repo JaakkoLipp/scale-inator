@@ -79,6 +79,13 @@ def setup_serial(arguments):
     else:
         ser = SerialPretend()
 
+# remove barcode zeros, failsafe maybe add later?
+def zeroremove(string):
+    if string[0] == "0":
+        return zeroremove(string[1:])
+    else:
+        return string
+
 
 def createWindowUIwrap(arguments, ifsuccess, collector, weight):
     if arguments.gui:
@@ -124,7 +131,7 @@ def readinput(arguments):
                 continue
             else:
                 # convert id to int
-                currentID = int(currentID)
+                currentID = int(zeroremove(currentID))
 
         except ValueError:
             print("Invalid input, try again.")
