@@ -82,7 +82,7 @@ def setup_serial(arguments):
 # remove barcode zeros, failsafe maybe add later?
 def zeroremove(string):
     if string[0] == "0":
-        return recurs(string[1:])
+        return zeroremove(string[1:])
     else:
         return string
 
