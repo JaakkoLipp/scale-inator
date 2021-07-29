@@ -23,10 +23,6 @@ import random
 import serial
 import sys
 # import time
-try:
-    from . import data
-except ImportError:
-    import data
 
 
 class SerialPretend:
@@ -37,21 +33,19 @@ class SerialPretend:
         return None
 
     def readline(self):
-        return str(round(random.uniform(10, 60), 2)).encode("utf8")
+        return ("ST,G    " +
+                str(round(random.uniform(10, 60), 2)) +
+                "0000kg").encode("utf8")
 
     def close(self):
-        print("Closed successfully")
+        return True
 
 
 def cleanup():
     '''
-    Close serial and file gracefully
+    Close file gracefully
     '''
     print("Cleaning up")
-    try:
-        ser.close()
-    except Exception:
-        print("serial already closed.")
     # file close
 
 
@@ -61,23 +55,9 @@ def arg_parser(args):
                         help="Use dummy data instead of reading from serial")
     parser.add_argument("--gui", action="count",
                         help="Show GUI (REQUIRES TK)")
+    parser.add_argument("--config", help="dd")
     return parser.parse_args()
 
-
-def setup_serial(arguments):
-    global ser
-    if not arguments.pretend:
-        # serial init
-        #19200 9600 4800 2400 1200 are possible baudrates
-        ser = serial.Serial(
-            port='/dev/ttyUSB0',
-            baudrate=9600,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1)
-    else:
-        ser = SerialPretend()
 
 # remove barcode zeros, failsafe maybe add later?
 def zeroremove(string):
@@ -87,7 +67,7 @@ def zeroremove(string):
         return string
 
 
-def createWindowUIwrap(arguments, ifsuccess, collector, weight):
+def createWindowUIwrap(ifsuccess, collector, weight):
     if arguments.gui:
         try:
             from .UI import createWindow
@@ -95,16 +75,20 @@ def createWindowUIwrap(arguments, ifsuccess, collector, weight):
             from UI import createWindow
         createWindow(ifsuccess, collector, weight)
 
+
 def readscale():
-    while 1: #fix this with pretend later maybe?
-            #ser needs to be set everytime before reading it to get value
-        ser = serial.Serial(
-            port='/dev/ttyUSB0',
-            baudrate=9600,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS,
-            timeout=1)
+    while 1:  # fix this with pretend later maybe?
+        # ser needs to be set everytime before reading it to get value
+        if not arguments.pretend:
+            ser = serial.Serial(
+                port='/dev/ttyUSB0',
+                baudrate=9600,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                bytesize=serial.EIGHTBITS,
+                timeout=1)
+        else:
+            ser = SerialPretend()
         weight = ser.readline().decode('ascii')
         if len(weight) < 17:
             continue
@@ -113,7 +97,13 @@ def readscale():
     ser.close()
     return weight
 
-def readinput(arguments):
+
+def readinput():
+    try:
+        from . import data
+    except ImportError:
+        import data
+
     # set variable for id
     previousID = None
 
@@ -142,12 +132,12 @@ def readinput(arguments):
             print("negative value not accepted.")
             continue
         # cut "ST,G    x.xxKG"
-        weight=weight[8:-2] # cut 8 first("ST,G    "), and 2 last(kg)
-        #kg still appears in data.csv? it cant calculate total with letters
+        weight = weight[8:-2]  # cut 8 first("ST,G    "), and 2 last(kg)
+        # kg still appears in data.csv? it cant calculate total with letters
         # ID processing # scam prevention, check same persons all baskets pls
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
-            createWindowUIwrap(arguments, False, 0, 0)
+            createWindowUIwrap(False, 0, 0)
             continue
         # prints & collector
         collector = data.get_collectorID(currentID)
@@ -155,7 +145,7 @@ def readinput(arguments):
         try:
             data.dataHandler(weight, currentID, collector)
             print("#%s, SUCCESSFULLY SAVED %s" % (collector, weight))
-            createWindowUIwrap(arguments, True, collector, weight)
+            createWindowUIwrap(True, collector, weight)
         # save fails:
         except OSError:
             print("saving failed! line %s" %
@@ -170,13 +160,12 @@ def main():
     '''
 
     # Argument parsing
+    global arguments
     arguments = arg_parser(sys.argv[1:])
 
     atexit.register(cleanup)
 
-    setup_serial(arguments)
-
-    readinput(arguments)
+    readinput()
 
 
 if __name__ == "__main__":

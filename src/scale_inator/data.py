@@ -5,12 +5,19 @@ import sys  # noqa: F401
 import csv
 import os
 # illegal aliens
-
+try:
+    from .main import arguments
+except ImportError:
+    from main import arguments
 
 def xdg_data_dir():
+    if arguments.config:
+        path = arguments.config
+    else:
+        path = "~/.local/share"
     datadir = os.path.join(
         os.getenv('XDG_DATA_HOME',
-                  os.path.expanduser("~/.local/share")),
+                  os.path.expanduser(path)),
         "scale_inator")
     if not os.path.isdir(datadir):
         os.mkdir(datadir)
