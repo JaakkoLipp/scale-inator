@@ -90,7 +90,8 @@ def readscale():
         else:
             ser = SerialPretend()
         weight = ser.readline().decode('ascii')
-        if len(weight) < 17:
+        #if len(weight) < 17:      fix missing chars from readline fix^2
+        if len(weight) == 16:
             continue
         else:
             break
