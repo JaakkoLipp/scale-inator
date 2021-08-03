@@ -52,7 +52,7 @@ def randlist(lngth, **kwargs):
 def test_input_quit(capsys, main_setup, monkeypatch):
     arguments = main_setup
     monkeypatch.setattr('builtins.input', lambda _: 'q')
-    readinput(arguments)
+    readinput(optarg=arguments)
     captured = capsys.readouterr()
     assert captured.out == "Quitting...\n"
 
@@ -63,7 +63,7 @@ def test_input_scam_detection(capsys, main_setup, monkeypatch):
     inputs = iter(["20", "20"])
     monkeypatch.setattr('builtins.input', lambda msg: next(inputs))
     try:
-        readinput(arguments)
+        readinput(optarg=arguments)
     except StopIteration:
         captured = capsys.readouterr()
         assert re.search("SAME AS PREVIOUS,\nNOT ACCEPTED.\n", captured.out)
@@ -77,7 +77,7 @@ def test_input_csv(main_setup, monkeypatch):
     iterate = iter(list(map(str, num_list))+["q"])
 
     monkeypatch.setattr('builtins.input', lambda msg: next(iterate))
-    readinput(arguments)
+    readinput(optarg=arguments)
 
     from src.scale_inator.data import get_csv_name, xdg_data_dir
     from datetime import datetime

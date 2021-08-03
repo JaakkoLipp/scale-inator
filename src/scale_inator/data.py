@@ -8,7 +8,14 @@ import os
 try:
     from .main import arguments
 except ImportError:
-    from main import arguments
+    try:
+        from main import arguments
+    except ImportError:
+        # Scuffed problems require scuffed solutions
+        class ArgsPretend:
+            def __init__(self, **kwargs):
+                self.__dict__.update(kwargs)
+        arguments = ArgsPretend(gui=0, pretend=1, config=None)
 
 def xdg_data_dir():
     if arguments.config:
