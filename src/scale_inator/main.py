@@ -34,8 +34,8 @@ class SerialPretend:
 
     def readline(self):
         return ("ST,G    " +
-                str(round(random.uniform(10, 60), 2)) +
-                "0000kg").encode("utf8")
+                str(round(random.uniform(10, 60), 3)) +
+                "0KG").encode("utf8")
 
     def close(self):
         return True
@@ -99,11 +99,17 @@ def readscale():
     return weight
 
 
-def readinput():
+def readinput(optarg=None):
     try:
         from . import data
     except ImportError:
         import data
+
+    # let optargs work without arguments in global scope
+    # this is so that tests work
+    if optarg:
+        global arguments
+        arguments = optarg
 
     # set variable for id
     previousID = None
