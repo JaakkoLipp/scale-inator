@@ -55,12 +55,15 @@ def arg_parser(args):
                         help="Use dummy data instead of reading from serial")
     parser.add_argument("--gui", action="count",
                         help="Show GUI (REQUIRES TK)")
-    parser.add_argument("--config", help="dd")
+    parser.add_argument("--savedir", help="Location where data saved")
+    parser.add_argument("--xlsxgen", action="count", help="Generate xlsx from data")
     return parser.parse_args()
 
 
 # remove barcode zeros, failsafe maybe add later?
 def zeroremove(string):
+    if len(string) < 1:
+        return ""
     if string[0] == "0":
         return zeroremove(string[1:])
     else:
@@ -171,8 +174,14 @@ def main():
     arguments = arg_parser(sys.argv[1:])
 
     atexit.register(cleanup)
-
-    readinput()
+    if not arguments.xlsxgen:
+        readinput()
+    else:
+        try:
+            from . import xlsx
+        except ImportError:
+            import xlsx
+        xlsx.create_xlsx_alt()
 
 
 if __name__ == "__main__":

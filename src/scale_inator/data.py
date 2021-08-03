@@ -15,17 +15,17 @@ except ImportError:
         class ArgsPretend:
             def __init__(self, **kwargs):
                 self.__dict__.update(kwargs)
-        arguments = ArgsPretend(gui=0, pretend=1, config=None)
+        arguments = ArgsPretend(gui=0, pretend=1, savedir=None)
 
 def xdg_data_dir():
-    if arguments.config:
-        path = arguments.config
+    '''
+    Was once a proper xdg compliant function, not anymore
+    '''
+    if arguments.savedir:
+        path = arguments.savedir
     else:
-        path = "~/.local/share"
-    datadir = os.path.join(
-        os.getenv('XDG_DATA_HOME',
-                  os.path.expanduser(path)),
-        "scale_inator")
+        path = os.getenv('XDG_DATA_HOME', os.path.expanduser("~/.local/share/scale_inator"))
+    datadir = path
     if not os.path.isdir(datadir):
         os.mkdir(datadir)
     return datadir
