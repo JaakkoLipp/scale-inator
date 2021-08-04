@@ -19,7 +19,7 @@ except ImportError:
 
 def xdg_data_dir():
     '''
-    Was once a proper xdg compliant function, not anymore
+    Was once a proper xdg compliant function, not anymore, sadge moment
     '''
     if arguments.savedir:
         path = arguments.savedir
