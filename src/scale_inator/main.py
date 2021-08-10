@@ -178,10 +178,10 @@ def main():
         readinput()
     else:
         try:
-            from . import xlsx
+            from .xlsx import create_xlsx
         except ImportError:
-            import xlsx
-        xlsx.create_xlsx_alt()
+            from xlsx import create_xlsx
+        create_xlsx()
 
 
 if __name__ == "__main__":
