@@ -1,10 +1,9 @@
-# mansikka data
 import random  # noqa: F401
 import datetime
 import sys  # noqa: F401
 import csv
 import os
-# illegal aliens
+
 try:
     from .main import arguments
 except ImportError:
@@ -41,25 +40,38 @@ def get_collectorID(koppaID):
 
 
 def get_csv_name():
+    '''
+    Returns a csv name with current date included
+    '''
     return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
 
 
 def dataHandler(weight, currentID, collector):
+    '''
+    Append data to csv
+    '''
     date = datetime.datetime.now()
     date = date.strftime("%d.%m.%Y")
 
-    f = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
+    file = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
 
-    writer = csv.writer(f)
+    writer = csv.writer(file)
     info = (weight, currentID, collector, date)
     writer.writerow(info)
-    f.close()
+    file.close()
 
 
-def undo():  # needs testing
+# TODO: needs testing
+def undo():
+    '''
+    Undo last row
+    '''
     try:
         print("Undo in progress...")
-        f1 = open(
+
+        # First read all lines into variable then pop last element from that
+        # and write it to the file.
+        read_file = open(
             os.path.join(
                 xdg_data_dir(),
                 get_csv_name()
@@ -67,38 +79,34 @@ def undo():  # needs testing
             "r",
             newline=""
         )
-        lines = f1.readlines()  # get rows into list
-        lastRow = lines.pop()  # removes last row -> lastRow var
-        f1.close()
-        # open with write
-        f2 = open(
+
+        lines = read_file.readlines()
+        lastRow = lines.pop()
+
+        read_file.close()
+
+        write_file = open(
             os.path.join(
                 xdg_data_dir(),
                 get_csv_name()),
             "w",
             newline=""
         )
-        f2.writelines(lines)
-        f2.close()
-        # rewrite done
+
+        write_file.writelines(lines)
+
+        write_file.close()
+
         print("Last row successfully removed:\n", lastRow)
     except OSError or IndexError:
         print("Nothing to undo.\n")
 
 
+# TODO: what is purpose?
 def total():
     print("Calculate total not ready.\n")
 
 
-def cloudBackup():  # backup to GDrive or blank github repo? github with bash.
+# TODO: backup to GDrive or blank github repo? github with bash.
+def cloudBackup():
     print("Cloud backup not ready.\n")
-
-
-'''
-NOTES:
- change filename to date
- data.csv name not optimal? daily new data.
-'''
-
-# total()
-# dataHandler(1,12,1)

@@ -44,14 +44,14 @@ def create_xlsx():
     summersum = pandas.DataFrame(columns=["Kerääjä ID", "Paino"])
     summersum = summersum.astype({"Kerääjä ID": uint8, "Paino": float32})
 
-    for id in csv_combined["CollectorID"].unique():
+    for collector_id in csv_combined["CollectorID"].unique():
         summersum = summersum.append(
             pandas.DataFrame(
                 [
                     {
-                        "Kerääjä ID": id,
+                        "Kerääjä ID": collector_id,
                         "Paino": csv_combined.where(
-                            csv_combined["CollectorID"] == id
+                            csv_combined["CollectorID"] == collector_id
                         )["KG"].sum()
                     }
                 ]
@@ -64,15 +64,15 @@ def create_xlsx():
             ignore_index=True
         )
 
-    location = os.path.join(data.xdg_data_dir(), "mansikanpoiminta.xlsx")
-
-    writer = pandas.ExcelWriter(location, engine="xlsxwriter")
+    writer = pandas.ExcelWriter(
+        os.path.join(data.xdg_data_dir(), "mansikanpoiminta.xlsx"),
+        engine="xlsxwriter"
+    )
     summersum.to_excel(
         writer,
         sheet_name="Koko kesän kerätty määrä",
         index=False
     )
-
     workbook = writer.book
     worksheet = writer.sheets["Koko kesän kerätty määrä"]
 
