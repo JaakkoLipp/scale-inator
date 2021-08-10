@@ -17,6 +17,7 @@ except ImportError:
                 self.__dict__.update(kwargs)
         arguments = ArgsPretend(gui=0, pretend=1, savedir=None)
 
+
 def xdg_data_dir():
     '''
     Was once a proper xdg compliant function, not anymore, sadge moment
@@ -24,7 +25,8 @@ def xdg_data_dir():
     if arguments.savedir:
         path = arguments.savedir
     else:
-        path = os.getenv('XDG_DATA_HOME', os.path.expanduser("~/.local/share/scale_inator"))
+        path = os.getenv('XDG_DATA_HOME',
+                         os.path.expanduser("~/.local/share/scale_inator"))
     datadir = path
     if not os.path.isdir(datadir):
         os.mkdir(datadir)
