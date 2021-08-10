@@ -17,12 +17,10 @@ https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unk
 
 from argparse import ArgumentParser
 from inspect import currentframe, getframeinfo
-# import datetime
 import atexit
 import random
 import serial
 import sys
-# import time
 
 
 class SerialPretend:
@@ -55,8 +53,10 @@ def arg_parser(args):
                         help="Use dummy data instead of reading from serial")
     parser.add_argument("--gui", action="count",
                         help="Show GUI (REQUIRES TK)")
-    parser.add_argument("--savedir", help="Location where data saved")
-    parser.add_argument("--xlsxgen", action="count", help="Generate xlsx from data")
+    parser.add_argument("--savedir",
+                        help="Location where data saved")
+    parser.add_argument("--xlsxgen", action="count",
+                        help="Generate xlsx from data")
     return parser.parse_args()
 
 
@@ -93,7 +93,7 @@ def readscale():
         else:
             ser = SerialPretend()
         weight = ser.readline().decode('ascii')
-        #if len(weight) < 17:      fix missing chars from readline fix^2
+        # if len(weight) < 17:      fix missing chars from readline fix^2
         if len(weight) == 16:
             continue
         else:
@@ -178,10 +178,10 @@ def main():
         readinput()
     else:
         try:
-            from . import xlsx
+            from .xlsx import create_xlsx
         except ImportError:
-            import xlsx
-        xlsx.create_xlsx_alt()
+            from xlsx import create_xlsx
+        create_xlsx()
 
 
 if __name__ == "__main__":

@@ -1,8 +1,6 @@
-from datetime import date
-import csv
+from numpy import float32, uint8
 import os
 import re
-import xlsxwriter
 import pandas
 try:
     from . import data
@@ -10,150 +8,82 @@ except ImportError:
     import data
 
 
-COLLECTOR_AMOUNT = 100  # hard coded for now
-
-
 def create_xlsx():
-    workbook = xlsxwriter.Workbook(
-        "test1.xlsx",
-        {'constant_memory': True})
+    '''
+    Create xlsx from csv files.
+    '''
 
-    summer_data = workbook.add_worksheet("Summer data")
-    day_data = workbook.add_worksheet("Day data")
-    raw_data = workbook.add_worksheet("Raw data")
+    csv_files = []
+    csvregex = re.compile("data-([0-9]{4})([0-9]{2})([0-9]{2}).csv")
 
-    # Must escape g in format so that excel doesnt reject it
-    kilogram_format = workbook.add_format(
-        {"num_format": "0.00k\g"})  # noqa: W605
+    for entry in os.listdir(data.xdg_data_dir()):
+        if not csvregex.fullmatch(entry):
+            continue
+        csv_files = csv_files + [os.path.join(data.xdg_data_dir(), entry)]
 
-    summer_data.write(0, 0, "Summer sum")
-    summer_data.write(0, 1, "Collector ID")
-
-    for collectorID in range(1, COLLECTOR_AMOUNT):
-        summer_data.write_formula(
-            collectorID,
-            0,
-            (
-                (
-                    "=SUMPRODUCT(" +
-                    "'Raw data'!C:C=B{}," +
-                    "'Raw data'!A:A)"
-                ).format(collectorID+1)),
-            kilogram_format
+    try:
+        csv_combined = pandas.concat(
+            [
+                pandas.read_csv(
+                    file,
+                    header=None,
+                    parse_dates=[3],
+                    dtype={
+                        "KG": float32,
+                        "KoppaID": uint8,
+                        "CollectorID": uint8
+                    },
+                    names=["KG", "KoppaID", "CollectorID", "Date"]
+                ) for file in csv_files
+            ],
+            ignore_index=True
         )
-        summer_data.write_number(collectorID, 1, collectorID)
+    except ValueError:
+        raise ValueError("CSV column has incorrect data")
 
-    day_data.write(0, 0, "Day sum")
-    day_data.write(0, 1, "Collector ID")
-    day_data.write(0, 2, "Day")
+    summersum = pandas.DataFrame(columns=["Kerääjä ID", "Paino"])
+    summersum = summersum.astype({"Kerääjä ID": uint8, "Paino": float32})
 
-    dates = []
-    csvregex = re.compile("data-([0-9]{4})([0-9]{2})([0-9]{2}).csv")
-    for entry in os.listdir(data.xdg_data_dir()):
-        match = csvregex.fullmatch(entry)
-        dates = dates + [date(
-            int(match.group(1)),
-            int(match.group(2)),
-            int(match.group(3)))]
-    re.purge()
-    dayformat = workbook.add_format(
-        {"num_format": "dd.m.yyyy"})
-
-    row_num = 1
-    for day in dates:
-        for collectorID in range(1, COLLECTOR_AMOUNT):
-            real_row = row_num + 1
-            day_data.write_formula(
-                row_num,
-                0,
-                (
-                    (
-                        "=SUMPRODUCT(" +
-                        "'Raw data'!C:C=B{}," +
-                        "'Raw data'!D:D=C{}," +
-                        "'Raw data'!A:A)"
-                    ).format(real_row, real_row)),
-                kilogram_format
-            )
-            day_data.write_number(row_num, 1, collectorID)
-            day_data.write_datetime(row_num, 2, day, dayformat)
-            row_num += 1
-
-    dayregex = re.compile("([0-9]{2})\.([0-9]{2})\.([0-9]{4})")  # noqa: W605
-    row_num = 1
-    for entry in os.listdir(data.xdg_data_dir()):
-        if not csvregex.fullmatch(entry):
-            continue
-        csvfile = open(os.path.join(data.xdg_data_dir(), entry), "rt")
-        csvreader = csv.reader(csvfile, delimiter=",")
-        for row in csvreader:
-            match = dayregex.fullmatch(row[3])
-            day = date(
-                int(match.group(3)),
-                int(match.group(2)),
-                int(match.group(1)))
-            raw_data.write_number(
-                row_num,
-                0,
-                float(row[0])
-            )
-            raw_data.write_number(
-                row_num,
-                1,
-                int(row[1])
-            )
-            raw_data.write_number(
-                row_num,
-                2,
-                int(row[2])
-            )
-            raw_data.write_datetime(
-                row_num,
-                3,
-                day,
-                dayformat
-            )
-            row_num += 1
-
-        csvfile.close()
-    workbook.close()
-
-def create_xlsx_alt():
-    files = []
-    csvregex = re.compile("data-([0-9]{4})([0-9]{2})([0-9]{2}).csv")
-    for entry in os.listdir(data.xdg_data_dir()):
-        if not csvregex.fullmatch(entry):
-            continue
-        files = files + [os.path.join(data.xdg_data_dir(), entry)]
-    dataframe = pandas.concat([pandas.read_csv(f,header=None,parse_dates=[3],names=["KG","KoppaID","CollectorID","Date"]) for f in files],ignore_index=True)
-
-    # Yes, am iterating pandas dataframes. It works for now :|
-    summersum = pandas.DataFrame(columns=['CollectorID','KG'])
-    summersum = summersum.astype({'CollectorID': int, 'KG': float})
-    max_collector = dataframe["CollectorID"].max()
-    for col_num in range(1,max_collector+1):
-        temp = dataframe.copy()
-        temp = temp.query('(CollectorID == ' + str(col_num) + ')')
-        if temp.empty:
-            continue
-        else:
-            summersum= summersum.append({'CollectorID': col_num, 'KG': temp["KG"].sum()}, ignore_index= True)
-    pandas.to_numeric(summersum['CollectorID'],downcast='integer')
+    for id in csv_combined["CollectorID"].unique():
+        summersum = summersum.append(
+            pandas.DataFrame(
+                [
+                    {
+                        "Kerääjä ID": id,
+                        "Paino": csv_combined.where(
+                            csv_combined["CollectorID"] == id
+                        )["KG"].sum()
+                    }
+                ]
+            ).astype(
+                {
+                    "Kerääjä ID": uint8,
+                    "Paino": float32
+                }
+            ),
+            ignore_index=True
+        )
 
     location = os.path.join(data.xdg_data_dir(), "mansikanpoiminta.xlsx")
-    
+
     writer = pandas.ExcelWriter(location, engine="xlsxwriter")
-    summersum.to_excel(writer, sheet_name="Summer sum", index=False)
-    
-    workbook  = writer.book
-    worksheet = writer.sheets['Summer sum']
+    summersum.to_excel(
+        writer,
+        sheet_name="Koko kesän kerätty määrä",
+        index=False
+    )
+
+    workbook = writer.book
+    worksheet = writer.sheets["Koko kesän kerätty määrä"]
 
     # Must escape g in format so that excel doesnt reject it
     kilogram_format = workbook.add_format(
-        {"num_format": "0.00k\g"})  # noqa: W605
-    
+        {
+            "num_format": "0.00k\g"  # noqa: W605
+        }
+    )
+
+    worksheet.set_column("A:A", len("Kerääjä ID"))
+    worksheet.set_column("B:B", 10, kilogram_format)  # arbitary width
+
     workbook.close()
-
-
-if __name__ == "__main__":
-    create_xlsx_alt()
