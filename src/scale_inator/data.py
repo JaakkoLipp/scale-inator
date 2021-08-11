@@ -1,10 +1,5 @@
-# mansikka data
-import random  # noqa: F401
-import datetime
-import sys  # noqa: F401
-import csv
-import os
-# illegal aliens
+from os import path as ospath
+
 try:
     from .main import arguments
 except ImportError:
@@ -25,11 +20,15 @@ def xdg_data_dir():
     if arguments.savedir:
         path = arguments.savedir
     else:
-        path = os.getenv('XDG_DATA_HOME',
-                         os.path.expanduser("~/.local/share/scale_inator"))
+        from os import getenv
+        path = getenv(
+            'XDG_DATA_HOME',
+            ospath.expanduser("~/.local/share/scale_inator")
+        )
     datadir = path
-    if not os.path.isdir(datadir):
-        os.mkdir(datadir)
+    if not ospath.isdir(datadir):
+        from os import mkdir
+        mkdir(datadir)
     return datadir
 
 
@@ -41,64 +40,88 @@ def get_collectorID(koppaID):
 
 
 def get_csv_name():
-    return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
+    '''
+    Returns a csv name with current date included
+    '''
+    import datetime
+
+    return (
+        "data-{}.csv".format(
+            datetime.datetime.now().strftime("%Y%m%d")
+        )
+    )
 
 
 def dataHandler(weight, currentID, collector):
+    '''
+    Append data to csv
+    '''
+    import datetime
+
     date = datetime.datetime.now()
     date = date.strftime("%d.%m.%Y")
 
-    f = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
+    file = open(
+        ospath.join(
+            xdg_data_dir(),
+            get_csv_name()
+        ),
+        "a",
+        newline=""
+    )
 
-    writer = csv.writer(f)
-    info = (weight, currentID, collector, date)
-    writer.writerow(info)
-    f.close()
+    from csv import writer as csvwriter
+    writer = csvwriter(file)
+    writer.writerow((weight, currentID, collector, date))
+    file.close()
 
 
-def undo():  # needs testing
+# TODO: needs testing
+def undo():
+    '''
+    Undo last row
+    '''
     try:
         print("Undo in progress...")
-        f1 = open(
-            os.path.join(
+
+        # First read all lines into variable then pop last element from that
+        # and write it to the file.
+        read_file = open(
+            ospath.join(
                 xdg_data_dir(),
                 get_csv_name()
             ),
             "r",
             newline=""
         )
-        lines = f1.readlines()  # get rows into list
-        lastRow = lines.pop()  # removes last row -> lastRow var
-        f1.close()
-        # open with write
-        f2 = open(
-            os.path.join(
+
+        lines = read_file.readlines()
+        lastRow = lines.pop()
+
+        read_file.close()
+
+        write_file = open(
+            ospath.join(
                 xdg_data_dir(),
                 get_csv_name()),
             "w",
             newline=""
         )
-        f2.writelines(lines)
-        f2.close()
-        # rewrite done
+
+        write_file.writelines(lines)
+
+        write_file.close()
+
         print("Last row successfully removed:\n", lastRow)
     except OSError or IndexError:
         print("Nothing to undo.\n")
 
 
+# TODO: what is purpose?
 def total():
     print("Calculate total not ready.\n")
 
 
-def cloudBackup():  # backup to GDrive or blank github repo? github with bash.
+# TODO: backup to GDrive or blank github repo? github with bash.
+def cloudBackup():
     print("Cloud backup not ready.\n")
-
-
-'''
-NOTES:
- change filename to date
- data.csv name not optimal? daily new data.
-'''
-
-# total()
-# dataHandler(1,12,1)

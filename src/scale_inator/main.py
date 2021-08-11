@@ -11,43 +11,32 @@
     ########
      #####
       ###
-
-https://cdn.discordapp.com/attachments/624244854754377758/857616413937106954/unknown.png
 '''
-
-from argparse import ArgumentParser
-from inspect import currentframe, getframeinfo
-import atexit
-import random
-import serial
-import sys
 
 
 class SerialPretend:
     '''
-    Serial like weight generator, Replaces serial input for demo
+    Dummy class to act like serial output from scale
     '''
     def __init__(self):
         return None
 
     def readline(self):
+        from random import uniform
         return ("ST,G    " +
-                str(round(random.uniform(10, 60), 3)) +
+                str(round(uniform(10, 60), 3)) +
                 "0KG").encode("utf8")
 
     def close(self):
         return True
 
 
-def cleanup():
-    '''
-    Close file gracefully
-    '''
-    print("Cleaning up")
-    # file close
-
-
 def arg_parser(args):
+    '''
+    Argument parsing related code
+    (possible redundant to be separated from main())
+    '''
+    from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
@@ -60,17 +49,31 @@ def arg_parser(args):
     return parser.parse_args()
 
 
-# remove barcode zeros, failsafe maybe add later?
 def zeroremove(string):
+    '''
+    Remove leading zeros from barcode input
+    '''
+    if type(string) != str:
+        raise TypeError("Only string input is accepted")
     if len(string) < 1:
         return ""
-    if string[0] == "0":
-        return zeroremove(string[1:])
-    else:
-        return string
+
+    def zeroremove_inner(string):
+        '''
+        Workhorse function which is free from preliminary error checking
+        '''
+        if string[0] == "0":
+            return zeroremove_inner(string[1:])
+        else:
+            return string
+
+    return zeroremove_inner(string)
 
 
 def createWindowUIwrap(ifsuccess, collector, weight):
+    '''
+    Wrapper function for showing success/fail window depending on cmd argument
+    '''
     if arguments.gui:
         try:
             from .UI import createWindow
@@ -80,25 +83,34 @@ def createWindowUIwrap(ifsuccess, collector, weight):
 
 
 def readscale():
-    while 1:  # fix this with pretend later maybe?
-        # ser needs to be set everytime before reading it to get value
+    '''
+    Loop which reads and returns output from serial on the caveat that it first
+    checks if its corrupted or not lazily
+    '''
+    # TODO: fix this with pretend later maybe?
+    while (True):
         if not arguments.pretend:
-            ser = serial.Serial(
+            from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
+            # serial_output needs to be set everytime
+            serial_output = Serial(
                 port='/dev/ttyUSB0',
                 baudrate=9600,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE,
-                bytesize=serial.EIGHTBITS,
+                parity=PARITY_NONE,
+                stopbits=STOPBITS_ONE,
+                bytesize=EIGHTBITS,
                 timeout=1)
         else:
-            ser = SerialPretend()
-        weight = ser.readline().decode('ascii')
-        # if len(weight) < 17:      fix missing chars from readline fix^2
-        if len(weight) == 16:
+            serial_output = SerialPretend()
+
+        weight = serial_output.readline().decode('ascii')
+
+        # Cheap corruption check
+        if len(weight) == 16:  # arbitary length that seems to work
             continue
         else:
             break
-    ser.close()
+
+    serial_output.close()
     return weight
 
 
@@ -114,53 +126,53 @@ def readinput(optarg=None):
         global arguments
         arguments = optarg
 
-    # set variable for id
     previousID = None
 
     while (True):
         currentID = input(
             "Scan ID, Q to exit, to remove last write \"undo\": "
         )
+
+        # User input / barcode reader input handling
         try:
             if currentID.upper() == "Q":
                 print("Quitting...")
                 break
-                # no quit
             elif currentID.lower() == "undo":
-                data.undo()  # remove last line incase of wrong data
+                data.undo()
                 continue
             else:
-                # convert id to int
                 currentID = int(zeroremove(currentID))
-
         except ValueError:
             print("Invalid input, try again.")
             continue
-        # read weight from scale
+
+        # Read weight from scale
         weight = readscale()
+
         if "-" in weight:
             print("negative value not accepted.")
             continue
-        # cut "ST,G    x.xxKG"
-        weight = weight[8:-2]  # cut 8 first("ST,G    "), and 2 last(kg)
-        # kg still appears in data.csv? it cant calculate total with letters
-        # ID processing # scam prevention, check same persons all baskets pls
+
+        # TODO: kg still appears in data.csv?
+        # cut 8 first("ST,G    "), and 2 last(kg)
+        weight = weight[8:-2]
+
         if currentID == previousID:
             print("SAME AS PREVIOUS,\nNOT ACCEPTED.")
             createWindowUIwrap(False, 0, 0)
             continue
-        # prints & collector
+
         collector = data.get_collectorID(currentID)
-        # try save
+
         try:
             data.dataHandler(weight, currentID, collector)
             print("#%s, SUCCESSFULLY SAVED %s" % (collector, weight))
             createWindowUIwrap(True, collector, weight)
-        # save fails:
         except OSError:
+            from inspect import currentframe, getframeinfo
             print("saving failed! line %s" %
                   getframeinfo(currentframe()).lineno)
-        # csv write weight+ID same row different columns
         previousID = currentID
 
 
@@ -168,12 +180,11 @@ def main():
     '''
     Main function
     '''
+    from sys import argv
 
-    # Argument parsing
     global arguments
-    arguments = arg_parser(sys.argv[1:])
+    arguments = arg_parser(argv[1:])
 
-    atexit.register(cleanup)
     if not arguments.xlsxgen:
         readinput()
     else:
