@@ -1,8 +1,4 @@
-import random  # noqa: F401
-import datetime
-import sys  # noqa: F401
-import csv
-import os
+from os import path as ospath
 
 try:
     from .main import arguments
@@ -24,11 +20,15 @@ def xdg_data_dir():
     if arguments.savedir:
         path = arguments.savedir
     else:
-        path = os.getenv('XDG_DATA_HOME',
-                         os.path.expanduser("~/.local/share/scale_inator"))
+        from os import getenv
+        path = getenv(
+            'XDG_DATA_HOME',
+            ospath.expanduser("~/.local/share/scale_inator")
+        )
     datadir = path
-    if not os.path.isdir(datadir):
-        os.mkdir(datadir)
+    if not ospath.isdir(datadir):
+        from os import mkdir
+        mkdir(datadir)
     return datadir
 
 
@@ -43,21 +43,36 @@ def get_csv_name():
     '''
     Returns a csv name with current date included
     '''
-    return ("data-{}.csv".format(datetime.datetime.now().strftime("%Y%m%d")))
+    import datetime
+
+    return (
+        "data-{}.csv".format(
+            datetime.datetime.now().strftime("%Y%m%d")
+        )
+    )
 
 
 def dataHandler(weight, currentID, collector):
     '''
     Append data to csv
     '''
+    import datetime
+
     date = datetime.datetime.now()
     date = date.strftime("%d.%m.%Y")
 
-    file = open(os.path.join(xdg_data_dir(), get_csv_name()), "a",  newline="")
+    file = open(
+        ospath.join(
+            xdg_data_dir(),
+            get_csv_name()
+        ),
+        "a",
+        newline=""
+    )
 
-    writer = csv.writer(file)
-    info = (weight, currentID, collector, date)
-    writer.writerow(info)
+    from csv import writer as csvwriter
+    writer = csvwriter(file)
+    writer.writerow((weight, currentID, collector, date))
     file.close()
 
 
@@ -72,7 +87,7 @@ def undo():
         # First read all lines into variable then pop last element from that
         # and write it to the file.
         read_file = open(
-            os.path.join(
+            ospath.join(
                 xdg_data_dir(),
                 get_csv_name()
             ),
@@ -86,7 +101,7 @@ def undo():
         read_file.close()
 
         write_file = open(
-            os.path.join(
+            ospath.join(
                 xdg_data_dir(),
                 get_csv_name()),
             "w",

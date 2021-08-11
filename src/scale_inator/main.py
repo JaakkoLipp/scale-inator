@@ -13,13 +13,6 @@
       ###
 '''
 
-from argparse import ArgumentParser
-from inspect import currentframe, getframeinfo
-import atexit
-import random
-import serial
-import sys
-
 
 class SerialPretend:
     '''
@@ -29,21 +22,13 @@ class SerialPretend:
         return None
 
     def readline(self):
+        from random import uniform
         return ("ST,G    " +
-                str(round(random.uniform(10, 60), 3)) +
+                str(round(uniform(10, 60), 3)) +
                 "0KG").encode("utf8")
 
     def close(self):
         return True
-
-
-def cleanup():
-    '''
-    Close file gracefully
-    (currently doesnt do anything)
-    '''
-    print("Cleaning up")
-    # TODO: file close?
 
 
 def arg_parser(args):
@@ -51,6 +36,7 @@ def arg_parser(args):
     Argument parsing related code
     (possible redundant to be separated from main())
     '''
+    from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument("-p", "--pretend", action="count",
                         help="Use dummy data instead of reading from serial")
@@ -104,13 +90,14 @@ def readscale():
     # TODO: fix this with pretend later maybe?
     while (True):
         if not arguments.pretend:
+            from serial import Serial, PARITY_NONE, STOPBITS_ONE, EIGHTBITS
             # serial_output needs to be set everytime
-            serial_output = serial.Serial(
+            serial_output = Serial(
                 port='/dev/ttyUSB0',
                 baudrate=9600,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE,
-                bytesize=serial.EIGHTBITS,
+                parity=PARITY_NONE,
+                stopbits=STOPBITS_ONE,
+                bytesize=EIGHTBITS,
                 timeout=1)
         else:
             serial_output = SerialPretend()
@@ -183,6 +170,7 @@ def readinput(optarg=None):
             print("#%s, SUCCESSFULLY SAVED %s" % (collector, weight))
             createWindowUIwrap(True, collector, weight)
         except OSError:
+            from inspect import currentframe, getframeinfo
             print("saving failed! line %s" %
                   getframeinfo(currentframe()).lineno)
         previousID = currentID
@@ -192,11 +180,11 @@ def main():
     '''
     Main function
     '''
+    from sys import argv
 
     global arguments
-    arguments = arg_parser(sys.argv[1:])
+    arguments = arg_parser(argv[1:])
 
-    atexit.register(cleanup)
     if not arguments.xlsxgen:
         readinput()
     else:
